@@ -1,0 +1,8 @@
+{
+  "version": "v3.6",
+  "bytes": 15794210,
+  "sha256": "a8692973b882b3f67d1b0a5f4bd67132c62f58a427c8d4996118eb8c41238c7d",
+  "packages": 879,
+  "slots": 1334,
+  "extraction": "Official release factory; no DOM and no automatic start; transit payload split only."
+}

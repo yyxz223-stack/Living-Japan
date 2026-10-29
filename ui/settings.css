@@ -1,0 +1,4 @@
+.lj-settings-content .set12-grouphead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}.lj-settings-content .set12-grouphead>span{font-size:12px;color:var(--muted,#5b6966)}
+.lj-setting-channel h4{margin:8px 0 5px;font-size:14px}.lj-setting-channel label{display:block;margin-bottom:7px}.lj-favorite-form{padding:9px 0;border-bottom:1px solid #52766f22}.lj-favorite-form .lj-inline{margin-top:7px}
+.lj-settings-save{position:sticky;bottom:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;background:var(--panel,#f8f7f3);border-top:1px solid #52766f33;font-size:12px}.lj-diagnostic-filters{padding:6px 10px}.lj-settings-content ul{padding-left:20px;overflow-wrap:anywhere}
+#diagReport .lj-setting-group{padding:10px}#diagFilter .lj-diagnostic-filters{padding:0;flex-wrap:nowrap;overflow-x:auto}#diagFilter .lj-diagnostic-filters button{flex:none;min-height:28px;font-size:12px;padding:4px 6px}

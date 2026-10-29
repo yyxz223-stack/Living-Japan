@@ -1,0 +1,9 @@
+.preview-user/
+.local/
+node_modules/
+*.log
+tests/artifacts/
+docs/实施计划_20261029.md
+docs/本轮小本本.md
+docs/*小本本_20261029.md
+docs/引擎迁移记录.md

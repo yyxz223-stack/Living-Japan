@@ -1,0 +1,9 @@
+#living-japan-open{position:fixed;right:8px;top:45%;z-index:30000;border:1px solid #b86836;border-radius:50%;width:42px;height:42px;background:#ae3e32;color:white;font:600 14px/1.2 "Microsoft YaHei",sans-serif;box-shadow:0 2px 8px #0002;cursor:pointer;touch-action:none}
+#living-japan-shell{position:fixed;z-index:30001;inset:4vh 3vw;background:#f8f7f3;box-shadow:0 12px 48px #0005;border:1px solid #6c7d74;border-radius:8px;overflow:hidden}
+#living-japan-shell[hidden]{display:none}
+#living-japan-shell iframe{display:block;width:100%;height:100%;border:0;background:#f8f7f3}
+#living-japan-shell[data-layout="portrait"]{inset:auto;top:50%;left:50%;transform:translate(-50%,-50%);width:min(430px,100vw);height:min(860px,96vh)}
+#living-japan-shell[data-layout="mobile"]{inset:0;transform:none;width:100%;height:100dvh;border-radius:0}
+#living-japan-close{position:absolute;right:2px;top:2px;z-index:5;width:28px;height:28px;border:0;border-radius:4px;background:transparent;color:#55645e;font:20px sans-serif;cursor:pointer}
+#living-japan-close:hover{background:#52766f22}
+@media(max-width:600px){#living-japan-shell{inset:0;height:100dvh;border-radius:0}#living-japan-open{right:6px}}

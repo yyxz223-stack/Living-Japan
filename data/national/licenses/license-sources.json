@@ -1,0 +1,50 @@
+[
+  {
+    "file": "CDLA-Permissive-2.0.txt",
+    "url": "https://raw.githubusercontent.com/Community-Data-License-Agreements/Releases/main/CDLA-Permissive-2.0.txt",
+    "sha256": "4531a67d443284d93ffed0803df5b10634aff21c3d77e381f2d48af01d875868",
+    "bytes": 2354
+  },
+  {
+    "file": "Apache-2.0.txt",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358
+  },
+  {
+    "file": "Foursquare-NOTICE.txt",
+    "url": "https://opensource.foursquare.com/places-notice-txt/",
+    "downloaded_html_sha256": "7589c22a5b693fc2395bdd60a48b47a5614da8d1613a9a4332b53132a66fc584",
+    "downloaded_html_bytes": 91202,
+    "sha256": "860cc43a771b9573d993dfbd7d002c647ebe99d888c892004de6c8cdbb006b4e",
+    "bytes": 1786,
+    "transformation": "HTML正文转纯文本；Foursquare仅保留完整NOTICE正文。"
+  },
+  {
+    "file": "ODbL-1.0.txt",
+    "url": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "downloaded_html_sha256": "b8d8aebb21bf405f93f6e21bbf0d8f0a749844f9812ec58692f189add6402b47",
+    "downloaded_html_bytes": 51176,
+    "sha256": "b36366bc77104617aaab823640e4a90bd477a01cb2925cb64a4d97752c127cf0",
+    "bytes": 27698,
+    "transformation": "HTML正文转纯文本；Foursquare仅保留完整NOTICE正文。"
+  },
+  {
+    "file": "CC0-1.0.txt",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/legalcode.en",
+    "downloaded_html_sha256": "b43732f4c1463b087cf10d4daf8d8766514b2bf8f21bc5ef50905f95be227726",
+    "downloaded_html_bytes": 32223,
+    "sha256": "372aa0056224f0376bb7b9dc08ecfb6e194b4fc8eb394bf6a2562e2c0b0d3ca2",
+    "bytes": 18069,
+    "transformation": "HTML正文转纯文本；Foursquare仅保留完整NOTICE正文。"
+  },
+  {
+    "file": "CC-BY-4.0.txt",
+    "url": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+    "downloaded_html_sha256": "58230517b7895aa219ff46a6ed63e67057a1582fb9ea054b16728a8c13525650",
+    "downloaded_html_bytes": 48742,
+    "sha256": "ef109c78311475d0bfecb624c3285e707b85521a96256730c6dad2a114f7f87a",
+    "bytes": 28413,
+    "transformation": "HTML正文转纯文本；Foursquare仅保留完整NOTICE正文。"
+  }
+]

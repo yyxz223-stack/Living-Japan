@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Living Japan｜手机 mini 功能同步预览</title>
+<style>
+:root{--sea:#0068c9;--sea2:#00a6bf;--ink:#172d3a;--muted:#3f5b66;--paper:#f2f8f7;--panel:#fff;--line:#bdcfd4;--control:#6f8f99;--soft:#ddf1f4;--copper:#c34a09;--ok:#00755f;--warn:#9b5700;--warnsoft:#fff0cd;--origin:#b84535;--glass:rgba(255,255,255,.94);--device-w:430px;--device-h:860px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#e6eff0;color:var(--ink);font-family:Inter,"Microsoft YaHei UI","PingFang SC","Noto Sans CJK SC",sans-serif}button,input{font:inherit}button{color:inherit}[hidden]{display:none!important}.preview-head{width:430px;margin:0 auto;padding:22px 0 15px;display:flex;align-items:baseline;gap:12px}.preview-head h1{margin:0;font-size:19px;line-height:1.4}.preview-head span{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}.preview-note{width:430px;margin:0 auto;padding:15px 0 25px;color:var(--muted);font-size:12px;line-height:1.75}.device{position:relative;width:var(--device-w);height:var(--device-h);margin:0 auto;overflow:hidden;border:1px solid var(--control);border-radius:10px;background:var(--paper);color:var(--ink);box-shadow:0 8px 25px rgba(15,32,43,.12);container-type:inline-size}.device{font-size:14px}.device *{box-sizing:border-box}.device button{cursor:pointer}.top{height:48px;display:flex;align-items:stretch;background:var(--panel);border-bottom:1px solid var(--line);position:relative;z-index:12}.lily{width:34px;display:grid;place-items:center;color:var(--sea);flex:none}.lily svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round}.nav{display:flex;flex:1}.nav button{position:relative;flex:1;display:grid;place-items:center;padding:0;border:0;background:transparent;color:var(--muted);font-size:14px}.nav button.on{color:var(--ink);font-weight:800}.nav button.on:after{content:"";position:absolute;bottom:0;left:12px;right:12px;height:2px;background:var(--sea)}.win{display:flex;align-items:center;padding:0 4px;gap:1px}.win button{display:grid;place-items:center;width:25px;height:34px;padding:0;border:0;background:transparent;color:var(--muted);font-size:12px}.win button:last-child{font-size:19px}.win button.on{color:var(--sea);font-weight:800}.body{position:absolute;inset:48px 0 0;overflow:hidden;background:var(--panel)}.page{position:absolute;inset:0;overflow:hidden}.search{height:42px;display:flex;align-items:center;gap:9px;padding:0 12px;border:1px solid var(--control);border-radius:6px;background:var(--panel);color:var(--muted);font-size:13px}.search b{font-weight:500;color:var(--ink)}.grow{flex:1;min-width:0}.muted{color:var(--muted)}.tiny{font-size:12px}.small{font-size:12px}.btn{min-height:36px;padding:6px 12px;border:1px solid var(--control);border-radius:5px;background:var(--panel);font-size:13px;font-weight:600;line-height:1.35}.btn.primary{background:var(--sea);border-color:var(--sea);color:#fff}.btn.soft{background:var(--soft);border-color:var(--sea);color:var(--sea)}.btn.origin{color:var(--origin);border-color:var(--origin)}.btn.dest{color:var(--ok);border-color:var(--ok)}.btn.text{border-color:transparent;color:var(--muted);font-weight:500}.rowline{display:flex;align-items:center;gap:9px}.tag{display:inline-flex;align-items:center;min-height:22px;padding:1px 7px;border:1px solid var(--line);border-radius:99px;color:var(--muted);font-size:12px;white-space:nowrap}.tag.ok{color:var(--ok);border-color:var(--ok);background:var(--soft)}.tag.warn{color:var(--warn);border-color:var(--warn);background:var(--warnsoft)}.switch{position:relative;display:inline-block;width:38px;height:22px;padding:0;border:1px solid var(--control);border-radius:99px;background:#e1e9ea;vertical-align:middle;flex:none}.switch:after{content:"";position:absolute;width:14px;height:14px;left:3px;top:3px;border-radius:50%;background:#647983}.switch.on{background:var(--soft);border-color:var(--sea)}.switch.on:after{transform:translateX(16px);background:var(--sea)}.list{border-top:1px solid var(--line)}.li{min-height:57px;display:flex;align-items:center;gap:9px;padding:8px 13px;border-bottom:1px solid var(--line);background:var(--panel)}.li .name{font-size:15px;font-weight:700;line-height:1.25}.li .meta{margin-top:3px;color:var(--muted);font-size:12px;line-height:1.35}.li .chev{margin-left:auto;color:var(--sea);font-size:19px}.crumb{height:38px;display:flex;align-items:center;gap:6px;padding:0 13px;color:var(--muted);font-size:12px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden}.crumb b{color:var(--sea)}.back{min-height:36px;padding:5px 13px;border:1px solid var(--control);border-radius:5px;background:var(--panel);font-size:13px;font-weight:700}.section-tabs{height:45px;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border-bottom:1px solid var(--line);background:#f5faf9}.section-tabs button{position:relative;display:grid;place-items:center;padding:0 3px;border:0;background:transparent;color:var(--muted);font-size:12px;text-align:center}.section-tabs button.on{color:var(--ink);font-weight:800;background:var(--soft)}.section-tabs button.on:after{content:"";position:absolute;bottom:0;left:15px;right:15px;height:2px;background:var(--sea)}.summary{display:flex;align-items:center;gap:12px;height:76px;padding:12px 14px;border-bottom:1px solid var(--line)}.metric{flex:1}.metric b{display:block;font-size:21px;line-height:1.2}.metric span{color:var(--muted);font-size:12px}.routebar{position:absolute;left:0;right:0;bottom:0;height:94px;z-index:8;background:var(--panel);border-top:1px solid var(--line);padding:8px 11px}.travel{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.travel button{padding:4px 2px;text-align:center;color:var(--muted);font-size:12px;border:1px solid transparent;border-radius:4px;background:transparent}.travel button.on{color:var(--sea);border-color:var(--sea);background:var(--soft);font-weight:700}.route-actions{display:grid;grid-template-columns:1fr 96px;gap:8px;margin-top:6px}.route-status{padding:5px 9px;background:var(--soft);color:var(--muted);font-size:12px;line-height:1.45}.map{position:relative;overflow:hidden;background:#edf4ef}.map svg{position:absolute;inset:0;width:100%;height:100%}.map .sea{fill:#c7e5ed}.map .land{fill:#f2f8f7}.map .park{fill:#d6ebdd}.map .road{fill:none;stroke:#fff;stroke-width:4}.map .minor{fill:none;stroke:#afc5cb;stroke-width:1}.map .rail{fill:none;stroke:#6f9cac;stroke-width:3}.map .rail2{fill:none;stroke:#d59c53;stroke-width:2.5}.map .station{fill:#fff;stroke:#0068c9;stroke-width:2}.map .spot{fill:#c34a09}.map .focus{fill:#fff;stroke:#b84535;stroke-width:3}.map text{font-family:"Microsoft YaHei UI",sans-serif;fill:#172d3a;font-size:11px;paint-order:stroke;stroke:#f2f8f7;stroke-width:3px;stroke-linejoin:round}.map .region-label{font-size:15px;letter-spacing:3px;fill:#3f5b66;opacity:.65}.map .search-float{position:absolute;z-index:3;left:11px;right:54px;top:11px;box-shadow:0 3px 12px rgba(15,32,43,.1);background:var(--glass)}.map .level{position:absolute;z-index:3;right:9px;top:11px;display:grid;background:var(--glass);border:1px solid var(--line);border-radius:5px;overflow:hidden}.map .level button{width:40px;padding:6px 0;text-align:center;font-size:11px;border:0;border-bottom:1px solid var(--line);background:transparent}.map .level button:last-child{border:0}.map .level .on{background:var(--sea);color:#fff}.map .zoom{position:absolute;right:9px;bottom:12px;display:grid;background:var(--glass);border:1px solid var(--line);border-radius:5px}.map .zoom button{display:grid;place-items:center;width:34px;height:34px;padding:0;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--sea);font-size:15px}.map .zoom button:last-child{border:0}.map .fav{position:absolute;left:9px;top:66px;display:flex;gap:5px}.map .fav button{padding:5px 9px;border:1px solid var(--line);border-radius:5px;background:var(--glass);font-size:12px}.map-open{position:absolute;left:9px;top:106px;min-height:34px;box-shadow:0 2px 8px rgba(15,32,43,.08)}.map-a{height:319px;border-bottom:1px solid var(--line)}.map-c{position:absolute;inset:0}.map-feed{position:absolute;top:319px;bottom:94px;left:0;right:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;background:var(--panel)}.place-head{padding:11px 14px 8px;border-bottom:1px solid var(--line)}.place-head h3{margin:0;font-size:20px;line-height:1.3}.place-head p{margin:3px 0 0;color:var(--muted);font-size:12px;line-height:1.4}.endpoint{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:9px 13px}.related-title{display:flex;align-items:center;padding:5px 13px 7px;min-height:31px}.related-title b{font-size:13px}.related-title span{margin-left:auto;color:var(--muted);font-size:12px}.scroll-hint{padding:10px 13px 14px;text-align:center;color:var(--muted);font-size:12px}.full-route{position:absolute;z-index:7;left:9px;right:9px;bottom:9px;display:flex;align-items:center;gap:8px;min-height:62px;padding:8px 10px;background:var(--glass);border:1px solid var(--control);border-radius:7px}.full-route .route-copy{flex:1;font-size:13px;line-height:1.5}.place-dock{position:absolute;z-index:6;left:9px;right:9px;bottom:82px;background:var(--glass);border:1px solid var(--control);border-radius:9px;overflow:hidden;box-shadow:0 8px 25px rgba(15,32,43,.14)}.dock-head{padding:10px 11px}.dock-head .place-name{font-size:16px;font-weight:800;line-height:1.3}.dock-head .meta{margin-top:3px;color:var(--muted);font-size:12px}.dock-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:9px}.dock-actions .btn{padding:5px 7px}.map-tools-bottom{position:absolute;left:9px;bottom:82px;display:flex;gap:5px}.map-tools-bottom span{padding:6px 9px;background:var(--glass);border:1px solid var(--line);border-radius:5px;font-size:12px}.region-search{height:62px;padding:10px 12px}.region-list-scroll{position:absolute;top:100px;bottom:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}.region-list-scroll .list{border-top:0}.inline-open{background:#f5faf9;border-bottom:1px solid var(--line);padding:0 13px 11px}.detail{padding:11px 0 0}.detail h3{margin:0 0 5px;font-size:19px}.detail p{margin:6px 0;color:var(--muted);font-size:12px;line-height:1.6}.detail .btn{padding:6px 9px}.region-drawer{position:absolute;z-index:10;inset:0;background:var(--panel);box-shadow:0 0 20px rgba(15,32,43,.16)}.drawer-bar{height:53px;display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line)}.drawer-bar b{font-size:15px}.region-tree{position:absolute;top:91px;bottom:0;left:0;right:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:5px 0 18px}.region-tree .li{min-height:44px;padding-top:5px;padding-bottom:5px;border-bottom:0}.region-tree .li .meta{font-size:12px}.region-tree .level2{padding-left:30px}.region-tree .level3{padding-left:48px}.region-tree .level4{padding-left:65px}.region-tree .selected{background:var(--soft);border-left:3px solid var(--sea);padding-left:45px}.region-drawer .crumb{position:absolute;top:53px;left:0;right:0;background:var(--panel);z-index:2}.pkg-roots{height:49px;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.pkg-roots button{position:relative;display:grid;place-items:center;padding:0 2px;border:0;background:transparent;color:var(--muted);font-size:12px;text-align:center}.pkg-roots button.on{color:var(--sea);background:var(--soft);font-weight:800}.pkg-roots button.on:after{content:"";position:absolute;bottom:0;left:14px;right:14px;height:2px;background:var(--sea)}.pkg-roots i{display:block;width:7px;height:7px;margin:0 auto 3px;border:1px solid var(--control);border-radius:50%}.pkg-roots .enabled i{background:var(--sea);border-color:var(--sea)}.pkg-context{height:80px;padding:10px 12px;border-bottom:1px solid var(--line);background:#f5faf9}.pkg-context .rowline+.rowline{margin-top:8px}.pkg-context .crumb{height:auto;padding:0 4px;border:0}.package-scroll{position:absolute;top:160px;bottom:49px;left:0;right:0;overflow-y:auto;scrollbar-width:thin}.pkg-list .li{min-height:61px}.pkg-list .li .switch{margin-left:auto}.notice{padding:10px 12px;background:var(--soft);border-left:3px solid var(--sea);color:var(--muted);font-size:12px;line-height:1.6}.pkg-notice{position:absolute;left:12px;right:12px;bottom:12px}.record-switch{display:grid;grid-template-columns:1fr 1fr;height:43px;margin:11px 12px;border:1px solid var(--control);border-radius:6px;overflow:hidden}.record-switch button{display:grid;place-items:center;border:0;background:transparent;color:var(--muted);font-size:13px}.record-switch button.on{background:var(--soft);color:var(--ink);font-weight:800;box-shadow:inset 0 -2px var(--sea)}.diag-filter{height:42px;display:flex;align-items:center;gap:4px;padding:0 11px;border-bottom:1px solid var(--line)}.diag-filter button{padding:5px 9px;border:0;background:transparent;color:var(--muted);font-size:12px}.diag-filter button.on{background:var(--soft);color:var(--sea);font-weight:800;border-radius:4px}.diag-scroll{position:absolute;top:228px;bottom:62px;left:0;right:0;overflow-y:auto;scrollbar-width:thin}.diag-list .li{align-items:flex-start;min-height:74px}.diag-list .li .reason{margin-top:4px;font-size:12px;line-height:1.4;color:var(--ink)}.copybar{position:absolute;left:0;right:0;bottom:0;height:62px;padding:10px 12px;background:var(--panel);border-top:1px solid var(--line)}.copybar .btn{width:100%;min-height:40px}.report{padding:0 13px 16px}.report section{padding:12px 0;border-bottom:1px solid var(--line)}.report h3{margin:0 0 8px;font-size:15px}.report p{margin:5px 0;color:var(--muted);font-size:12px;line-height:1.65}.report .code{padding:9px;background:#f2f8f7;border:1px solid var(--line);border-radius:5px;font:12px/1.6 monospace;white-space:pre-wrap;color:var(--ink)}.channel-list .li{min-height:69px}.channel-detail{margin:11px 12px;padding:12px;border:1px solid var(--line);border-radius:6px;background:#f5faf9}.channel-detail h3{margin:0 0 6px;font-size:15px}.channel-detail p{margin:6px 0;color:var(--muted);font-size:12px;line-height:1.6}.settings-scroll{position:absolute;top:45px;bottom:0;left:0;right:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:12px 12px 30px;scroll-behavior:auto}.set-group{margin-bottom:13px;border:1px solid var(--line);border-radius:7px;overflow:hidden;scroll-margin-top:12px}.set-group h3{margin:0;padding:10px 12px;background:#f5faf9;border-bottom:1px solid var(--line);font-size:15px;display:flex;align-items:center;gap:8px}.save-note{margin-left:auto;color:var(--muted);font-size:12px;font-weight:400;white-space:nowrap}.set-row{padding:11px 12px;border-bottom:1px solid var(--line)}.set-row:last-child{border:0}.set-label{display:flex;align-items:center;gap:9px;min-height:24px}.set-label b{font-size:14px}.set-label .switch{margin-left:auto}.set-row p{margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.55}.set-control{display:flex;gap:7px;margin-top:9px}.set-control .btn{flex:1}.input{min-height:36px;display:flex;align-items:center;padding:7px 10px;border:1px solid var(--control);border-radius:5px;background:#fff;color:var(--muted);font-size:13px}.group-save{width:calc(100% - 24px);margin:0 12px 12px}.settings-status{min-height:22px;padding:0 3px 8px;color:var(--ok);font-size:12px;line-height:1.6}.device.night{--paper:#0f202b;--panel:#17313d;--ink:#f2fafc;--muted:#b4ced8;--line:#3e5c69;--control:#7896a3;--soft:#204a5b;--glass:rgba(23,49,61,.96);--warnsoft:#3d3d32}.device.night .map .land{fill:#0f202b}.device.night .map .sea{fill:#123b4b}.device.night .map .park{fill:#1d4642}.device.night .map .road{stroke:#49606b}.device.night .map .minor{stroke:#263e49}.device.night .map text{fill:#f2fafc;stroke:#0f202b}.device.night .input,.device.night .report .code{background:#102631}.device.night .pkg-context,.device.night .set-group h3,.device.night .channel-detail,.device.night .inline-open,.device.night .section-tabs,.device.night .report section{background:#1b3542}.device.night .li{background:var(--panel)}.device.night .region-tree .selected{background:var(--soft)}@media(max-width:500px){.preview-head,.preview-note,.device{margin-left:0;margin-right:0}.preview-head{padding-left:4px;padding-right:4px}.preview-note{padding-left:4px;padding-right:4px}}@media print{body{background:#fff}.preview-head,.preview-note{display:none}.device{box-shadow:none}}
+.lily button{display:grid;place-items:center;width:34px;height:46px;padding:0;border:0;background:transparent;color:var(--sea)}.lily button:disabled{cursor:default}.lily svg{stroke-linejoin:round}.place-mainline{display:flex;align-items:flex-start;gap:8px}/* LJ-ALIGN-20261028：地点名与分类按文字基线对齐。 */.place-ident{display:flex;align-items:baseline;gap:9px;min-width:0;flex:1}.place-ident h3{flex:none}.place-kind{color:var(--muted);font-size:12px;line-height:1.4;white-space:nowrap}.place-head .place-intro{margin:3px 0 0;color:var(--muted);font-size:12px;line-height:1.4}/* LJ-PLACE-HEAD-20261028：双行内容整体对齐并收回按钮撑高。 */.place-mainline{align-items:center}.place-copy{flex:1;min-width:0}.place-head .place-intro{font-size:13px;line-height:1.35}.place-detail{min-height:0;flex:none;align-self:center;padding:4px 0 4px 8px;line-height:1.4}
+/* LJ-MAP-SEARCH-20261028：名称查看与红色定位分离。 */.map .search-float{background:transparent;box-shadow:none}.map .search-float>.search{background:var(--glass);box-shadow:0 3px 12px rgba(15,32,43,.1)}.map .search-float>.search:focus-within{border-color:var(--sea)}.search-input{flex:1;min-width:0;width:100%;height:38px;padding:0;border:0;outline:0;background:transparent;color:var(--ink);font-size:13px}.search-input::placeholder{color:var(--muted)}.search-results{position:absolute;z-index:5;top:47px;left:0;right:0;max-height:210px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;border:1px solid var(--control);border-radius:6px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);box-shadow:0 5px 16px rgba(15,32,43,.14)}.search-result{display:flex;align-items:stretch;min-height:50px;border-bottom:1px solid var(--line)}.search-result:last-child{border-bottom:0}.search-result-name{flex:1;min-width:0;padding:7px 10px;border:0;background:transparent;text-align:left;color:var(--ink)}.search-result-name b{display:block;font-size:14px;line-height:1.3}.search-result-name span{display:block;margin-top:2px;color:var(--muted);font-size:12px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.search-result-name:hover,.search-result-name:focus-visible{background:rgba(0,104,201,.08)}.search-locate{display:grid;place-items:center;width:42px;flex:none;padding:0;border:0;border-left:1px solid var(--line);background:transparent;color:var(--origin)}.search-locate svg{position:static;inset:auto;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.search-empty{padding:14px 12px;color:var(--muted);font-size:13px}.device.night .search-results{background:rgba(23,49,61,.9)}
+.fullmap-return{position:absolute;z-index:9;left:0;top:50%;transform:translateY(-50%);width:29px;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:9px 3px;border:1px solid var(--control);border-left:0;border-radius:0 6px 6px 0;background:var(--glass);color:var(--sea);box-shadow:3px 0 12px rgba(15,32,43,.1)}.fullmap-return span{font-size:19px;line-height:1}.fullmap-return b{writing-mode:vertical-rl;text-orientation:upright;letter-spacing:3px;font-size:13px;line-height:1}
+/* LJ-MAP-ADMIN-PARENT-20261028：行政节点可返回，但不作为交通端点。 */
+.place-kind [data-admin-target],.dock-head [data-admin-target]{min-height:0;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:3px}.place-kind [data-admin-target]:hover,.dock-head [data-admin-target]:hover{color:var(--sea)}.endpoint .btn:disabled,.dock-actions .btn:disabled{opacity:.45;cursor:default}
+/* LJ-VERTICAL-MAP-SESSION-20261028：四项暂存、快捷地点与控件融边。 */
+/* LJ-SEARCH-HISTORY-4X1-20261028：搜索栏融边，四次暂存以单行细分隔线承接。 */.map .search-float{left:0;right:54px;top:0}.map .search-float>.search{border-top:0;border-left:0;border-radius:0}.map .search-results{top:42px;border-left:0;border-radius:0 0 6px 0}.map .search-history{position:absolute;z-index:4;top:42px;left:0;right:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;height:32px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--glass);box-shadow:0 3px 12px rgba(15,32,43,.1)}.search-history button{min-width:0;min-height:0;padding:5px 7px;overflow:hidden;border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink);font-size:12px;text-align:center;white-space:nowrap;text-overflow:ellipsis}.search-history button:last-child{border-right:0}.search-history button[data-route-role="origin"]{box-shadow:inset 3px 0 var(--origin)}.search-history button[data-route-role="destination"]{box-shadow:inset 3px 0 var(--ok)}.map .search-history[data-covered="true"]{visibility:hidden;pointer-events:none}.map .fav{left:0;top:68%;transform:translateY(-50%);display:grid;gap:0;width:43px;overflow:hidden;border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0;background:var(--glass)}.map .fav button{min-height:55px;padding:5px 3px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;font-size:11px;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:1px}.map .fav button:last-child{border-bottom:0}.map .fav button[data-route-role="origin"]{box-shadow:inset 4px 0 var(--origin)}.map .fav button[data-route-role="destination"]{box-shadow:inset 4px 0 var(--ok)}/* LJ-MAP-LEVEL-ZOOM-20261028：普通地图层级收展，全地图层级常开；控件按最近边融合。 */.map .level{right:0;top:0;border-top:0;border-right:0;border-radius:0 0 0 5px}.map .level[data-expanded="false"] button{display:none;border-bottom:0}.map .level[data-expanded="false"] button.on{display:block}.map .zoom{right:0;bottom:0;overflow:hidden;border-right:0;border-bottom:0;border-radius:5px 0 0 0}#fullMapCanvas .zoom{top:50%;bottom:auto;transform:translateY(-50%);border-bottom:1px solid var(--line);border-radius:5px 0 0 5px}#fullMapCanvas .fav{top:32%}
+/* LJ-VERTICAL-REPRESENTATIVE-FLOWS-20261028：正文与路线状态复用现有框架。 */
+.full-route{display:block;min-height:96px;padding:7px 10px}.full-route-line{display:flex;align-items:center;gap:8px;margin-top:6px}.full-route-line .route-copy{flex:1;min-width:0}.full-route-line .btn{min-height:31px;padding:4px 8px}.place-dock{bottom:116px}.text-head{height:60px;display:flex;align-items:center;gap:9px;padding:9px 11px;border-bottom:1px solid var(--line);background:var(--panel)}.text-head .grow{min-width:0}.text-head h2{margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;font-size:18px;line-height:1.35;white-space:nowrap}.text-head small{color:var(--muted);font-size:11px}.text-meta{min-height:35px;display:flex;align-items:center;gap:8px;padding:6px 13px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px}.text-workspace{position:absolute;top:95px;bottom:64px;left:0;right:0;overflow:auto;padding:15px 15px 20px}.text-view{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:15px/1.9 Inter,"Microsoft YaHei UI","PingFang SC","Noto Sans CJK SC",sans-serif}.text-editor{width:100%;height:100%;min-height:300px;resize:none;padding:12px;border:1px solid var(--control);border-radius:6px;background:var(--panel);color:var(--ink);outline:0;font:14px/1.8 Inter,"Microsoft YaHei UI","PingFang SC","Noto Sans CJK SC",sans-serif}.text-editor:focus{border-color:var(--sea);box-shadow:0 0 0 2px var(--soft)}.text-footer{position:absolute;left:0;right:0;bottom:0;height:64px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:var(--panel)}.text-footer small{color:var(--muted);font-size:11px}.text-footer .btn{white-space:nowrap}.pkg-open{cursor:pointer}.pkg-open:focus-visible{outline:2px dashed var(--sea);outline-offset:2px}.pkg-context .crumb button{padding:0;border:0;background:transparent;color:var(--sea);font-size:12px}.device.night .text-head,.device.night .text-footer,.device.night .text-meta{background:var(--panel)}
+/* LJ-FULL-HIERARCHY-20261028：深层地点、资料与设置控件保持紧凑可用。 */
+.crumb [data-region-admin]{min-height:0;padding:0;border:0;background:transparent;color:var(--sea);font:inherit;cursor:pointer}.crumb [data-region-admin].current{font-weight:800}.region-related{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:9px}.region-related .btn{min-height:29px;padding:3px 0}.package-leaf{padding:16px}.package-leaf p{margin:8px 0 13px;color:var(--muted);font-size:13px;line-height:1.75}#packageSibling{width:126px;max-width:126px;height:30px;padding:0 5px;border:1px solid var(--control);border-radius:4px;background:var(--panel);color:var(--ink);font:12px Inter,"Microsoft YaHei UI",sans-serif}.settings-channel{display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:8px;margin-top:8px}.settings-channel b{font-size:12px}.favorite-setting{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:8px;margin-bottom:8px;color:var(--muted);font-size:13px}select.input{font:inherit}.guide-buttons{flex-wrap:wrap}#settingsGuideDetail{margin-top:10px}.diag-list .li[role="button"]{cursor:pointer}.diag-list .li[role="button"]:hover{background:var(--soft)}.diag-list .li[role="button"]:focus-visible{outline:2px dashed var(--sea);outline-offset:-3px}
+/* LJ-FLOW-GUIDE-20261028：测试说明只放在展示页底部。 */
+.flow-guide{width:min(430px,100%);margin:0 auto;padding:18px 4px 30px;border-top:1px solid var(--line);color:var(--ink)}.flow-guide h2{margin:0 0 10px;font-size:19px;line-height:1.4}.flow-guide p{margin:8px 0;color:var(--muted);font-size:14px;line-height:1.75}.flow-guide ol{margin:12px 0 0;padding-left:24px}.flow-guide li{padding:5px 0 5px 3px;font-size:14px;line-height:1.75}.flow-guide .flow-guide-note{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+/* LJ-VERTICAL-PEER-TEXT-20261028：平级地点、地图正文侧层与修改稿入口。 */
+.text-map-overlay{z-index:30;background:var(--panel)}
+#textEditorPanel{height:calc(100% - 48px);min-height:280px}
+.text-original{margin-top:12px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.text-original summary{padding:9px 11px;cursor:pointer;color:var(--muted);font-size:13px}
+.text-original pre{max-height:190px;margin:0;padding:11px;overflow:auto;border-top:1px solid var(--line);color:var(--muted);font:13px/1.7 Inter,"Microsoft YaHei UI",sans-serif;white-space:pre-wrap;overflow-wrap:anywhere}
+.text-original pre:empty:before{content:"（内置正文为空，可以补写修改稿）"}
+.text-footer{justify-content:flex-end}.text-footer>small{display:none}.text-footer .btn{padding-left:9px;padding-right:9px}
+.related-peer-name{min-width:0;padding:0;border:0;background:transparent;text-align:left;cursor:pointer}.related-peer-name .name,.related-peer-name .meta{display:block}.related-peer-name:hover .name{color:var(--sea)}
+.modified-filter{display:inline-flex;align-items:center;gap:5px;flex:none;color:var(--muted);font-size:12px;white-space:nowrap;cursor:pointer}.modified-filter input{width:16px;height:16px;margin:0;accent-color:var(--sea)}
+.package-leaf-open{min-height:38px;padding:7px 13px;white-space:nowrap}.package-row-open{min-width:0;min-height:36px;padding:6px 10px;white-space:nowrap}
+.device.night .text-original{background:var(--panel)}
+/* LJ-UNIFIED-DROPDOWNS-AND-MAP-20261028：同级菜单、筛选与地图操作保持原有框架。 */
+#device select{min-width:0;max-width:100%;text-overflow:ellipsis}
+/* LJ-PACKAGE-NATURAL-ROWS-20261028：资料区四段自然衔接，下拉外框容纳真实内容且不额外拉高。 */
+[data-page-root="package"]{display:grid;grid-template-rows:49px auto auto minmax(0,1fr)}
+.pkg-context{height:auto;min-height:0;display:grid;gap:4px;padding:6px 12px}
+.pkg-context .rowline{min-width:0}
+.pkg-context .rowline:first-child{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px}
+.pkg-context .rowline+.rowline{margin-top:0}
+.pkg-context .rowline:nth-child(2){display:grid;grid-template-columns:minmax(0,1fr) auto 38px;gap:8px}
+.pkg-context .rowline:nth-child(2)>.grow{display:grid;grid-template-columns:auto minmax(0,140px);align-items:center;justify-content:start;gap:8px;min-width:0}
+#device #packageSibling{width:140px;min-width:0;max-width:100%}
+.package-scroll{position:relative;inset:auto;min-height:0}
+[data-page-root="package"]>.related-title{gap:9px}
+[data-page-root="package"]>.related-title>b{flex:none}
+[data-page-root="package"]>.related-title>.modified-filter{margin-left:auto}
+[data-page-root="package"]>.related-title>#packageOffCount{margin-left:0}
+/* LJ-REGION-FULL-WIDTH-20261028：地区滚动层始终贴住左右，不随空正文详情缩窄。 */
+.region-list-scroll{left:0;right:0;width:100%}
+.region-list-scroll>.list,.region-list-scroll .li{width:100%}
+.route-actions{grid-template-columns:minmax(0,1fr) 76px}
+.route-actions .btn,.full-route-line .btn{white-space:nowrap}
+.route-status{padding:3px 9px}
+.route-status-line{display:flex;align-items:center;gap:8px;min-width:0}
+.route-status-line>b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.route-status-line .route-clear{flex:none;min-height:22px;padding:2px 0 2px 8px;border:0;border-radius:0;background:transparent;color:var(--sea);font-size:12px;font-weight:600;line-height:1.3}
+/* LJ-CURRENT-PLACE-SVG-LOCATE-20261028：图钉只追踪当前大标题的SVG点位，不改动选中对象。 */
+.current-map-locate{display:grid;place-items:center;width:34px;height:36px;flex:none;padding:7px;border:1px solid var(--line);border-radius:5px;background:transparent;color:var(--origin)}
+.current-map-locate svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.current-map-locate:hover{background:var(--soft)}
+.place-ident h3{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.place-kind{flex:none}
+#mainPlaceName,#dockPlaceName{cursor:pointer}
+.map text[data-map-place]{cursor:pointer}
+.vertical-toast{position:absolute;z-index:60;left:50%;bottom:112px;transform:translateX(-50%);max-width:calc(100% - 32px);padding:8px 13px;border-radius:5px;background:#17313d;color:#f2fafc;font-size:12px;line-height:1.5;opacity:0;pointer-events:none;transition:opacity .16s;white-space:nowrap}
+.vertical-toast.show{opacity:1}
+</style>
+<style>
+.preview-head,.preview-note,.flow-guide{width:min(1018px,calc(100% - 32px))}.preview-head{padding:18px 0 12px}.ljv-stage{width:min(1018px,calc(100% - 32px));margin:0 auto;display:grid;grid-template-columns:minmax(300px,1fr) 430px;gap:28px;align-items:start}.ljv-stage .device{margin:0}.ljv-chat{height:860px;display:flex;flex-direction:column;min-width:0;padding:20px;background:rgba(255,255,255,.6);border:1px solid #c6d6da;border-radius:10px;color:#294550}.ljv-chat header{display:flex;flex-direction:column;gap:6px;font-size:16px}.ljv-chat header span,.ljv-chat footer{font-size:12px;color:#526f79}.ljv-chat-space{flex:1;display:flex;align-items:center;justify-content:center}.ljv-chat-note{max-width:330px;font-size:15px;line-height:1.9}.ljv-chat-note p{margin:8px 0;color:#58727c}.ljv-chat label{font-size:14px;margin-bottom:8px}.ljv-chat textarea{width:100%;height:140px;resize:vertical;border:1px solid #8da9b3;border-radius:6px;padding:12px;background:#fcffff;color:#203d49;font:15px/1.8 "Microsoft YaHei UI",sans-serif}.ljv-chat footer{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px}.ljv-stage:has(.device[hidden]){grid-template-columns:minmax(300px,560px) 430px}.ljv-leave{position:absolute;inset:48px 0 0;z-index:100;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(15,32,43,.28)}.ljv-leave section{width:100%;padding:20px;background:var(--panel);border:1px solid var(--control);border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.16)}.ljv-leave h3{margin:0 0 12px;font-size:17px;line-height:1.5}.ljv-leave p{font-size:14px;line-height:1.8;color:var(--muted);margin:0 0 18px;overflow-wrap:anywhere}.ljv-leave-actions{display:grid;gap:8px}.ljv-leave-actions .btn{min-height:40px}.text-head{height:auto;min-height:68px;align-items:center;padding:9px 12px;gap:8px}.text-head h2{white-space:normal;overflow-wrap:anywhere;font-size:17px;line-height:1.4;max-height:72px;overflow-y:auto}.text-head .back{padding:6px 9px;flex:none}.text-head>.btn{max-width:87px;flex:none}.text-head small{font-size:12px}.text-meta{min-height:32px;padding:5px 13px;font-size:12px;flex-wrap:wrap;gap:5px}.text-workspace{position:relative;top:auto;bottom:auto;flex:1;min-height:0;padding:14px;overflow:auto;overscroll-behavior:contain}.text-footer{position:relative;bottom:auto;height:auto;min-height:58px;padding:8px 10px;gap:6px;flex-wrap:wrap}.text-footer small{font-size:12px}.text-footer .rowline{gap:5px}.text-footer .btn{padding:6px 8px}.page[data-page-root="text"]{display:flex;flex-direction:column}.text-view{font-size:15px;line-height:1.85}.text-editor{font-size:15px;line-height:1.8;min-height:320px;padding:10px}#textEditorPanel{height:calc(100% - 52px);min-height:330px}.text-original{border-width:1px 0 0;border-radius:0;margin-top:12px}.text-original summary{padding:10px 0;font-size:13px}.text-original pre{font-size:14px;max-height:240px;padding:10px 0}.vertical-toast{white-space:normal;text-align:center;width:max-content;max-width:calc(100% - 24px);font-size:13px;bottom:108px}.flow-guide{padding-left:0;padding-right:0}.flow-guide ol{max-width:850px}@media(max-width:800px){.ljv-stage{width:430px;max-width:100%;display:flex;flex-direction:column-reverse;gap:20px}.ljv-chat{width:430px;max-width:100%;height:390px}.preview-head,.preview-note,.flow-guide{width:430px;max-width:calc(100% - 24px)}.preview-head h1{font-size:17px}.ljv-chat-space{min-height:70px}.ljv-chat-note{font-size:13px}.ljv-chat textarea{height:100px}}
+
+/* LJ-V-READER-LAYOUT-20261029 */
+.text-head{min-height:64px;padding:8px 12px;align-items:center;flex:none}.text-head h2{max-height:90px;line-height:1.45;font-size:18px}.text-head small{font-size:12px}.ljv-reader-tools{display:flex;align-items:center;gap:7px;min-height:35px;padding:1px 12px 5px;position:relative;border-bottom:1px solid var(--line);flex:none}.ljv-reader-tools .btn{padding:5px 0;min-height:30px;font-size:13px}.ljv-reader-info{margin-left:auto;font-size:13px}.ljv-reader-info>summary{cursor:pointer;list-style:none;color:var(--sea);padding:5px 0;min-height:30px;display:flex;align-items:center;gap:5px}.ljv-reader-info>summary:after{content:'⌄'}.ljv-reader-info[open]>summary:after{content:'⌃'}.ljv-reader-info>section{position:absolute;left:10px;right:10px;top:100%;z-index:30;background:var(--panel);border:1px solid var(--control);border-radius:5px;box-shadow:0 5px 18px #102f4520;max-height:420px;overflow:auto;padding:12px}.ljv-reader-info header{display:flex;align-items:center;justify-content:space-between;min-height:30px}.ljv-reader-info dl{margin:4px 0 0}.ljv-reader-info dl>div{display:grid;grid-template-columns:70px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px solid var(--line);line-height:1.65}.ljv-reader-info dt{color:var(--muted)}.ljv-reader-info dd{margin:0;overflow-wrap:anywhere;color:var(--ink)}.ljv-reader-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line);padding:4px 12px 8px;flex:none;gap:7px;min-height:50px}.ljv-reader-tabs button{min-width:0;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--muted);font:inherit;font-size:14px;padding:8px 3px;min-height:38px;text-align:center;cursor:pointer}.ljv-reader-tabs button:hover{background:var(--soft);color:var(--sea)}.ljv-reader-tabs button.on{color:var(--panel);border-color:var(--sea);font-weight:700;background:var(--sea)}.text-meta{flex:none;min-height:31px;padding:5px 12px;gap:6px}.text-meta>span:nth-child(2){display:none}#ljvReaderCount{margin-left:auto;white-space:nowrap}.text-workspace{padding:12px;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}.text-view{height:100%;min-height:0;overflow:auto;overscroll-behavior:contain;font-size:15px;line-height:1.85}#textEditorPanel{height:100%;min-height:0;flex:1}.text-editor{height:100%;min-height:0;padding:10px;font-size:15px;line-height:1.85}.text-original[hidden]{display:none!important}.text-footer{min-height:54px;padding:7px 10px;flex:none}.text-footer .rowline{width:100%;justify-content:flex-end}.text-footer #textRestore{margin-right:auto}.text-footer .btn{min-height:35px;padding:6px 10px}.device.night [data-page-root="text"]{--sea:#7ec8ff}.device.night .ljv-reader-tabs button.on{background:var(--sea);color:var(--panel)}
+
+[data-page-root="package"]{grid-template-rows:49px 43px auto auto minmax(0,1fr)}
+.device.night [data-page-root="package"]{--sea:#7ec8ff;--warn:#f4c577}
+.mv-search{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);color:var(--muted);background:var(--panel)}
+.mv-search input{width:100%;min-width:0;height:40px;border:0;outline:0;background:transparent;color:var(--ink);font:14px Inter,"Microsoft YaHei UI",sans-serif}
+.mv-search input:focus{box-shadow:inset 0 -2px var(--sea)}
+.mv-search>button{width:34px;height:34px;flex:none;border:0;border-radius:4px;background:transparent;color:var(--sea);font-size:22px}
+.mv-search input::-webkit-search-cancel-button{display:none}
+[data-page-root="package"] .pkg-context{padding:6px 12px;gap:5px;overflow:visible;z-index:3;background:var(--panel)}
+.mv-nav{display:flex;align-items:center;gap:7px;min-width:0}
+.mv-nav .back{min-height:31px;padding:4px 7px;font-size:13px}
+.mv-nav>.btn{min-height:30px;padding:3px 0;font-size:12px;white-space:nowrap}
+.mv-menu{position:relative;flex:none;color:var(--muted);font-size:12px}
+.mv-menu>summary{padding:6px 4px;cursor:pointer}
+.mv-menu>div{position:absolute;right:0;top:100%;z-index:5;min-width:175px;max-width:290px;max-height:280px;overflow:auto;padding:4px;border:1px solid var(--control);border-radius:5px;background:var(--panel);box-shadow:0 4px 12px #153a4d22}
+.mv-menu button{display:block;width:100%;padding:8px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;line-height:1.4;text-align:left;overflow-wrap:anywhere}
+.mv-menu button:hover,.mv-menu button:disabled{background:var(--soft);color:var(--sea)}
+.mv-current{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 8px}
+.mv-current>strong{min-width:0;flex:1 1 140px;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.mv-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;flex:none}
+.mv-switch{display:inline-flex;align-items:center;gap:5px;min-height:32px;border-radius:4px;color:var(--muted);font-size:12px;white-space:nowrap;cursor:pointer}
+.mv-controls .mv-body{min-height:31px;padding:4px 7px;font-size:12px}
+.mv-status{position:relative;z-index:1;flex:none;display:inline-flex;align-items:center;height:20px;min-height:20px;margin-block:-2px;padding:0;border:0;background:transparent;color:var(--warn);font:inherit;font-size:12px;line-height:1.4;white-space:nowrap;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer;pointer-events:auto}
+.mv-status:hover,.mv-status:focus-visible{background:var(--soft);outline:1px solid var(--warn);outline-offset:2px}
+.mv-flat-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-height:30px;padding:4px 0}
+.mv-flat-title strong{font-size:14px}.mv-flat-title span{color:var(--muted);font-size:12px}
+.mv-search-title>.btn{margin-left:auto;min-height:31px;padding:4px 7px;color:var(--sea)}
+.mv-batch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding-bottom:2px}
+.mv-batch .btn{min-height:34px;padding:5px 7px;font-size:13px;white-space:nowrap}
+.mv-pick{display:grid;place-items:center;flex:none;width:24px;min-height:34px}
+.mv-pick input{width:18px;height:18px;margin:0;accent-color:var(--sea);cursor:pointer}
+.mv-row.picked{background:var(--soft);box-shadow:inset 3px 0 var(--sea)}
+.mv-no-body{font-size:12px;color:var(--muted)}
+.mv-name:disabled{cursor:default}
+.mv-name:disabled:hover strong{color:var(--ink)}
+.mv-summary{min-height:31px;padding:5px 12px 6px;border-bottom:1px solid var(--line)}
+.mv-summary b{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px;font-weight:500;color:var(--muted)}
+[data-page-root="package"] .package-scroll{overscroll-behavior:contain}
+#packageList{border-top:0}
+/* LJ-V-TARGETS-20261029：资料主目标覆盖原有留白，独立控制保持各自动作。 */
+.mv-row{position:relative;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+.mv-row.selected{background:var(--soft);box-shadow:inset 3px 0 var(--sea)}
+.mv-row-top{display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;min-width:0}
+.mv-name{flex:1 1 130px;display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0;min-height:31px;padding:0;border:0;background:transparent;color:var(--ink);text-align:left}
+.mv-name strong{font-size:15px;font-weight:700;line-height:1.4;overflow-wrap:anywhere}.mv-name>span{color:var(--sea);font-size:20px}
+.mv-name:hover strong{color:var(--sea)}.mv-name:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.mv-row-primary::before{content:"";position:absolute;inset:0;z-index:0}
+.mv-row-actions,.mv-row-top>.mv-pick{position:relative;z-index:1;flex:none}
+.mv-row-actions{align-self:center;border-radius:4px}
+.mv-row:has(.mv-row-primary:hover:not(:disabled)){background:color-mix(in srgb,var(--soft) 55%,var(--panel))}
+.mv-row:has(.mv-row-primary:hover:not(:disabled)) .mv-row-actions{background:var(--panel)}
+.mv-row.selected:has(.mv-row-primary:hover),.mv-row.picked:has(.mv-row-primary:hover){background:var(--soft)}
+.mv-row-primary:active:not(:disabled)::before{box-shadow:inset 3px 0 var(--sea)}
+.mv-row-primary:disabled::before{pointer-events:none}
+.mv-row-meta{display:flex;align-items:center;gap:6px;margin:3px 0 0;color:var(--muted);font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.mv-row-meta>span{min-width:0;flex:1}
+[data-page-root="package"] .pkg-notice{display:none}
+.mv-reader-controls{position:relative;z-index:20;display:flex;align-items:center;flex-wrap:wrap;flex:none;gap:5px 10px;padding:5px 12px;color:var(--ink);font-size:13px}
+.mv-reader-own{display:flex;align-items:center;gap:8px;flex:1 1 170px;min-width:0;flex-wrap:wrap;min-height:30px}
+.mv-reader-state{color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.mv-reader-state.paused{color:var(--warn)}
+.mv-reader-current-branch{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none;min-height:30px}
+.mv-reader-current-branch>.mv-switch>span{display:none}
+.mv-reader-upstream{margin-left:auto;flex:none}
+.mv-reader-upstream>summary{padding:5px 0;color:var(--sea);cursor:pointer;white-space:nowrap}
+.mv-reader-upstream>div{position:absolute;left:12px;right:12px;top:100%;z-index:25;max-height:280px;overflow-y:auto;overscroll-behavior:contain;padding:6px 10px;border:1px solid var(--control);border-radius:5px;background:var(--panel);box-shadow:0 5px 18px #102f4520}
+.mv-reader-ancestor{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:34px;border-top:1px solid var(--line)}
+.mv-reader-ancestor>span{min-width:0;overflow-wrap:anywhere}
+.device.night .mv-reader-controls{--sea:#7ec8ff;--warn:#f4c577}
+
+/* LJ-V-MAP-LAYOUT-20261029 */
+[data-page-root="region"]{display:grid;grid-template-rows:auto auto minmax(0,1fr)}
+[data-page-root="region"]>.region-list-scroll{position:relative;inset:auto;min-height:0}
+.region-search{height:auto;padding:8px 10px}
+.region-search>.rowline{gap:6px}.region-search .back{padding:5px 8px;font-size:12px}.region-search .search{padding:0 8px;gap:4px}.region-search .modified-filter{font-size:11px;gap:3px}
+.v-region-search-exit{border:0;background:transparent;font-size:20px;padding:2px 0 2px 4px;color:var(--muted)}
+.v-map-search-exit{flex:none;display:grid;place-items:center;min-width:28px;height:34px;padding:0;border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1}
+#regionCrumb{height:auto;min-height:37px;overflow-x:auto;scrollbar-width:thin;padding:7px 10px;gap:5px;flex-wrap:wrap;white-space:normal}
+#regionCrumb button{white-space:nowrap}.v-region-return{border:0;background:transparent;color:var(--sea);padding:0 7px 0 0;font:inherit;font-weight:700}
+.v-region-name{background:transparent;border:0;padding:0;text-align:left;cursor:pointer}.v-region-name .name,.v-region-name .meta{display:block;overflow-wrap:anywhere}
+.v-region-selected{background:var(--soft)}.v-region-actions{display:flex;flex-wrap:wrap;gap:6px}.v-region-actions .btn{min-height:34px;padding:6px 9px;font-size:12px}
+.detail .v-region-summary{font-size:13px;line-height:1.65;margin:0 0 9px}.region-related{gap:3px 10px}.region-related .btn{font-size:13px}
+.v-full-detail{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+#dockActions{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}#dockActions .btn{padding:5px 3px;font-size:12px;min-height:34px}
+.v-endpoint-selected{background:var(--soft);box-shadow:inset 0 -2px currentColor}
+.route-actions .btn:disabled,.full-route-line .btn:disabled{opacity:.45;cursor:default}
+.place-ident{flex-wrap:wrap;column-gap:8px;row-gap:1px}.place-ident h3{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}.place-kind{white-space:normal;line-height:1.5}.place-detail{white-space:nowrap}
+.map .search-history button{font-size:12px}.search-results .search-result-name span{white-space:normal;overflow:visible;text-overflow:clip}
+.vertical-toast{white-space:normal;width:max-content;text-align:center}
+.map .fav button{height:60px;min-height:60px;max-height:60px;display:flex;align-items:center;justify-content:center;font-size:12px;padding:5px 3px}.map .fav button>span{display:block;max-height:50px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;letter-spacing:0}.map .fav button:disabled{opacity:.5;cursor:default}
+#mapCanvas .fav{top:min(68%,calc(100% - 122px))}
+/* LJ-V-FULLMAP-FAVORITES-20261029 */
+#fullMapCanvas .fav{top:auto;bottom:calc(50% + 56px);transform:none}
+.v-favorite-labels,.v-favorite-setting{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.55fr);gap:8px}.v-favorite-labels{margin-bottom:6px;color:var(--muted);font-size:12px}.v-favorite-setting{margin-bottom:8px}.v-favorite-setting .input{width:100%;min-width:0;color:var(--ink);background:var(--panel)}
+.region-search .v-region-search-exit{display:grid;place-items:center;flex:none;min-width:28px;min-height:28px;padding:0}
+#regionCrumb{gap:3px;padding:4px 8px}
+#regionCrumb [data-region-admin],#regionDrawerCrumb [data-region-admin],#regionCrumb .v-region-return{display:inline-flex;align-items:center;min-height:26px;padding:0 4px;border-radius:3px}
+#regionDrawerCrumb{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;flex-wrap:nowrap;padding:0 8px;gap:3px}
+#regionDrawerCrumb [data-region-admin]{flex:none;white-space:nowrap}
+.region-tree .v-region-tree-list{list-style:none;margin:0;padding:0}
+.region-tree .v-region-tree-row{display:flex;align-items:stretch;gap:3px;min-height:42px;padding:0 10px 0 calc(8px + var(--tree-depth)*16px);border:0}
+.region-tree .v-region-tree-current{background:var(--soft);box-shadow:inset 3px 0 var(--sea)}
+.v-region-tree-toggle,.v-region-tree-spacer{flex:0 0 28px;width:28px}
+.v-region-tree-toggle{align-self:center;min-height:32px;border:1px solid var(--line);border-radius:3px;background:var(--soft);color:var(--sea);font:inherit;font-size:20px;line-height:1;cursor:pointer}
+.v-region-tree-name{flex:1;min-width:0;min-height:42px;padding:5px 4px;border:0;border-radius:3px;background:transparent;color:var(--ink);text-align:left;font:inherit;cursor:pointer}
+.v-region-tree-name .name,.v-region-tree-name .meta{display:block;overflow-wrap:anywhere}
+.v-region-tree-name .name{font-size:15px;font-weight:700;line-height:1.25}
+.v-region-tree-name .meta{margin-top:3px;font-size:12px;line-height:1.35;color:var(--muted)}
+.region-list-scroll .v-region-row{padding:0 10px 0 0;gap:4px;align-items:stretch}
+.region-list-scroll .v-region-row>.v-region-name{min-width:0;min-height:52px;padding:8px 12px;border-radius:0}
+.region-list-scroll .v-region-row>.v-region-enter{align-self:center;flex:none;min-width:64px;min-height:34px;padding:5px 8px;white-space:nowrap}
+.region-list-scroll .v-region-row>.tag{align-self:center;pointer-events:none}
+.region-tree button:hover,.region-tree button:active,#regionCrumb button:hover,#regionDrawerCrumb button:hover,.v-region-row>.v-region-name:hover,.v-region-row>.v-region-name:active{background:var(--soft)}
+.region-tree button:focus-visible,#regionCrumb button:focus-visible,#regionDrawerCrumb button:focus-visible,.v-region-row>button:focus-visible,.v-region-search-exit:focus-visible{outline:2px solid var(--sea);outline-offset:-2px}
+.region-tree .v-region-tree-toggle[aria-expanded="true"]{background:var(--sea);color:var(--panel);border-color:var(--sea)}
+.device.night [data-page-root="region"]{--sea:#7ec8ff}
+.device.night [data-page-root="region"] .btn.primary{color:var(--panel)}
+
+
+.win{gap:2px;padding:0 3px}.win button{width:30px;height:36px;border-radius:4px;flex:none}
+.device button:focus-visible,.device summary:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.win button:hover,.ljv-reader-tools .btn:hover,.v-map-search-exit:hover,.route-clear:hover{background:var(--soft);color:var(--sea)}
+.win button:active,.ljv-reader-tools .btn:active,.v-map-search-exit:active,.route-clear:active{box-shadow:inset 0 0 0 1px var(--sea)}
+.switch::before{content:"";position:absolute;inset:-5px 0}
+.switch:hover{box-shadow:0 0 0 2px var(--soft)}.switch:active{outline:1px solid var(--sea);outline-offset:2px}
+.mv-switch:hover{background:var(--soft)}
+.device .mv-row-primary:focus-visible{outline:0}.mv-row-primary:focus-visible::before{box-shadow:inset 3px 0 var(--sea)}.mv-row-primary:focus-visible strong{text-decoration:underline;text-underline-offset:3px}
+.modified-filter{min-height:24px;padding:4px 0;margin-top:-4px;margin-bottom:-4px;border-radius:3px}
+.modified-filter:hover{color:var(--sea)}.modified-filter:focus-within{outline:2px solid var(--sea);outline-offset:2px}
+.mv-menu>summary,.mv-reader-upstream>summary,.ljv-reader-info>summary{display:flex;align-items:center;gap:5px;min-height:30px;padding:4px 7px;list-style:none;border-radius:4px;background:var(--soft);color:var(--sea);line-height:1.3}
+.mv-menu>summary::-webkit-details-marker,.mv-reader-upstream>summary::-webkit-details-marker,.ljv-reader-info>summary::-webkit-details-marker{display:none}
+.mv-menu>summary::after,.mv-reader-upstream>summary::after,.ljv-reader-info>summary::after{content:"⌄";font-size:14px;line-height:1}
+.mv-menu[open]>summary::after,.mv-reader-upstream[open]>summary::after,.ljv-reader-info[open]>summary::after{content:"⌃"}
+.mv-menu>summary:hover,.mv-reader-upstream>summary:hover,.ljv-reader-info>summary:hover{box-shadow:inset 0 0 0 1px var(--sea)}
+.mv-menu[open]>summary,.mv-reader-upstream[open]>summary,.ljv-reader-info[open]>summary{background:var(--sea);color:var(--panel)}
+.ljv-reader-tools .btn{padding:5px 6px;border-radius:4px}
+#ljvCloseReaderInfo{display:grid;place-items:center;width:30px;min-width:30px;height:30px;min-height:30px;padding:0;font-size:18px}
+.place-kind [data-admin-target],.dock-head [data-admin-target]{min-height:24px;padding:2px 3px;border-radius:3px;line-height:1.4}
+.place-kind [data-admin-target]:hover,.dock-head [data-admin-target]:hover{background:var(--soft)}
+.place-kind [data-admin-target]:active,.dock-head [data-admin-target]:active{box-shadow:inset 0 0 0 1px var(--sea)}
+.v-map-search-exit{min-width:32px;border-radius:4px}
+.route-status-line .route-clear{min-height:24px;padding:2px 4px;border-radius:3px}
+.diag-filter button{min-height:32px;border-radius:4px}
+.diag-filter button:hover{background:var(--soft);color:var(--sea)}.diag-filter button:active{box-shadow:inset 0 0 0 1px var(--sea)}
+
+label.set-label{cursor:pointer;border-radius:3px}label.set-label:hover{background:var(--soft)}label.set-label:focus-within{outline:2px solid var(--sea);outline-offset:2px}
+
+/* LJ-MINI-BOUNDED-SHELL-20261029 */
+html,body{width:100%;height:100%;min-height:0;overflow:hidden;background:#dce9eb}
+.preview-head,.preview-note,.flow-guide{display:none!important}
+#miniStage,#miniStage:has(.device[hidden]){width:min(100%,430px);height:min(900px,100dvh);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:44px minmax(0,1fr) 92px;gap:0;align-items:stretch;overflow:hidden;background:var(--paper);box-shadow:0 0 30px #23424c18}
+.mini-browser{grid-row:1;display:flex;align-items:center;gap:8px;padding:5px 10px;background:#f7f9fa;color:#526874;border-bottom:1px solid #c8d3d6;font-size:11px}
+.mini-browser-address{flex:1;min-width:0;border:1px solid #c4d1d5;border-radius:16px;padding:6px 10px;background:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#miniStage .device{grid-row:2;width:100%;height:100%;min-width:0;min-height:0;margin:0;border:0;border-radius:0;box-shadow:none;container-type:size}
+#miniStage .top{height:44px}.body{inset:44px 0 0}
+.top .lily{width:32px}.top .lily button{width:32px;height:40px;min-width:0}
+.top .nav{min-width:0}.top .nav button{min-width:0;font-size:13px;min-height:44px}
+.top .win{padding:0 2px;gap:0}.top .win button{width:29px;height:40px;min-height:40px}.top [data-horizontal-link]{display:none}
+#miniStage .ljv-chat{grid-row:3;width:100%;height:100%;min-width:0;min-height:0;position:relative;display:grid;grid-template-columns:minmax(0,1fr) 38px;grid-template-rows:minmax(0,1fr) 18px;gap:3px 6px;padding:7px 9px 4px;background:#f8f4f4;color:#66545c;border:0;border-top:1px solid #d5c9cd;border-radius:0}
+.ljv-chat>header,.ljv-chat>.ljv-chat-space,.ljv-chat>label{display:none!important}
+#miniStage .ljv-chat textarea{grid-row:1;grid-column:1;width:100%;height:100%;min-height:0;resize:none;padding:6px 8px;border-color:#c5b6bc;background:#fff;font:14px/1.4 "Microsoft YaHei UI",sans-serif}
+#miniStage .ljv-chat footer{grid-row:2;grid-column:1 / -1;min-height:0;height:18px;font-size:10px;line-height:18px}
+#miniStage .ljv-chat footer span{font-size:10px}.mini-send{grid-row:1;grid-column:2;border:0;border-radius:5px;background:#745b69;color:#fff;font-size:18px;padding:0}
+#miniStage #ljvReopen{position:absolute;right:10px;bottom:100%;margin-bottom:10px;min-height:36px;z-index:20;font-size:12px;background:#fff}
+.vertical-toast{bottom:12px;max-width:calc(100% - 20px);font-size:12px;padding:8px 12px;pointer-events:none}
+.ljv-leave{inset:44px 0 0;padding:12px}.ljv-leave section{padding:14px}.ljv-leave p{font-size:13px;line-height:1.6;margin-bottom:12px}
+.device.night{--sea:#7ec8ff;--ok:#65c9ae;--origin:#ffaaa0;--copper:#ffb182}
+.device.night .btn.primary,.device.night .map .level .on{color:#102b38}
+.device button:focus-visible,.device input:focus-visible,.device textarea:focus-visible,.device select:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+@media(max-height:600px){#miniStage{grid-template-rows:36px minmax(0,1fr) 76px}.mini-browser{padding:3px 8px}.mini-browser-address{padding:4px 9px}.mini-browser>span{font-size:10px}}
+
+/* LJ-MINI-MAP-SPACE-20261029: bounded mobile map, scrolling detail and content-sized route. */
+[data-page-root="map"]{display:grid;grid-template-rows:minmax(130px,45%) minmax(0,1fr) auto}
+#mapCanvas{position:relative;height:auto;min-height:0;border-bottom:1px solid var(--line)}
+.device.night .map{background:var(--paper)}
+#mapFeed{position:relative;inset:auto;min-height:0;overflow:auto;overscroll-behavior:contain}
+[data-page-root="map"]>.routebar{position:relative;inset:auto;height:auto;min-height:0;padding:0}
+/* LJ-MINI-MAP-HEADER-20261029: title and actions share one row; path and introduction use full rows. */
+#mapFeed .place-head{padding:4px 9px}
+#mapFeed .place-mainline{display:grid;grid-template-columns:minmax(0,1fr) 30px 36px;gap:0 5px;align-items:center}
+#mapFeed .place-copy,#mapFeed .place-ident{display:contents}
+#mainPlaceName{grid-area:1/1;display:flex;align-items:center;min-width:0;min-height:30px;margin:0;padding:0;font-size:18px;line-height:1.35;white-space:normal;overflow:visible;overflow-wrap:anywhere}
+#mainPlaceKind{grid-area:2/1/3/-1;display:flex;flex-wrap:wrap;align-items:center;gap:1px;font-size:12px;line-height:1.4;white-space:normal}
+#mainPlaceKind [data-admin-target]{min-height:24px;padding:2px 1px}
+#mainPlaceIntro{grid-area:3/1/4/-1;margin:0;font-size:12px;line-height:1.4}
+#mainPlaceLocate{grid-area:1/2;align-self:center;width:30px;height:30px;min-width:30px;margin:0;padding:5px}
+#mainPlaceDetail{grid-area:1/3;align-self:center;width:36px;height:30px;min-width:36px;min-height:30px;margin:0;padding:3px 0;font-size:12px;white-space:nowrap}
+#mapFeed .endpoint{gap:0;padding:0;border-block:1px solid var(--line)}
+#mapFeed .endpoint .btn{min-height:34px;border:0;border-radius:0;padding:5px}
+#mapFeed .endpoint .btn+.btn{border-left:1px solid var(--line)}
+#mapFeed .related-title{min-height:29px;padding:3px 9px;gap:5px}
+#mapFeed .related-title b{font-size:12px;white-space:nowrap}
+#mapFeed .related-title span{font-size:11px;line-height:1.3}
+#mapRelated .li{padding:0 8px 0 0;gap:4px}
+#mapRelated .related-peer-name{min-height:43px;padding:6px 9px;align-self:stretch}
+#mapRelated .name{font-size:14px;line-height:1.35}
+#mapRelated .meta{font-size:12px;line-height:1.35;white-space:normal}
+#mapRelated .btn{min-height:30px;padding:4px;font-size:12px}
+#mapFeed .scroll-hint{display:none}
+[data-page-root="map"] .travel,[data-page-root="fullmap"] .travel{gap:0;border-bottom:1px solid var(--line)}
+[data-page-root="map"] .travel button,[data-page-root="fullmap"] .travel button{min-height:30px;padding:3px 1px;border:0;border-right:1px solid var(--line);border-radius:0;font-size:12px}
+[data-page-root="map"] .travel button:last-child,[data-page-root="fullmap"] .travel button:last-child{border-right:0}
+[data-page-root="map"] .route-actions,[data-page-root="fullmap"] .full-route-line{display:grid;grid-template-columns:minmax(0,1fr) 58px;gap:5px;margin:0;padding:4px 8px;align-items:center}
+[data-page-root="map"] .route-status,[data-page-root="fullmap"] .route-copy{min-width:0;padding:0;background:transparent;font-size:12px;line-height:1.4}
+[data-page-root="map"] .route-status-line,[data-page-root="fullmap"] .route-status-line{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+[data-page-root="map"] .route-status-line b,[data-page-root="fullmap"] .route-status-line b{min-width:0;flex:1;white-space:normal;overflow-wrap:anywhere;font-size:12px}
+[data-page-root="map"] .route-clear,[data-page-root="fullmap"] .route-clear{min-height:24px;padding:2px 0;font-size:11px;white-space:nowrap}
+[data-page-root="map"] .route-actions>.btn,[data-page-root="fullmap"] .full-route-line>.btn{min-height:34px;padding:4px 6px;font-size:13px}
+#routeMeta,[data-page-root="fullmap"] .route-copy>span{display:block;font-size:11px;line-height:1.4}
+#mapCanvas .search-float,#fullMapCanvas .search-float{left:0;right:43px;top:0;z-index:16}
+#mapCanvas .search,#fullMapCanvas .search{height:38px;min-height:38px;padding:0 6px;gap:4px;border-top:0;border-left:0;border-radius:0}
+#mapCanvas .search-input,#fullMapCanvas .search-input{height:36px;min-width:0;font-size:13px}
+#mapCanvas .v-map-search-exit,#fullMapCanvas .v-map-search-exit{min-width:24px;width:24px;height:30px;padding:0}
+#mapCanvas .search-results,#fullMapCanvas .search-results{top:38px;max-height:min(185px,35dvh);border-radius:0;overscroll-behavior:contain}
+#mapCanvas .search-results{max-height:135px}
+#mapCanvas .search-result,#fullMapCanvas .search-result{min-height:43px}
+#mapCanvas .search-result-name,#fullMapCanvas .search-result-name{padding:5px 8px}
+#mapCanvas .search-result-name b,#fullMapCanvas .search-result-name b{font-size:14px;line-height:1.35}
+#mapCanvas .search-result-name span,#fullMapCanvas .search-result-name span{font-size:11px;line-height:1.35}
+#mapCanvas .search-locate,#fullMapCanvas .search-locate{width:34px;min-width:34px}
+#mapCanvas [data-search-history],#fullMapCanvas [data-search-history]{display:none!important}
+#mapCanvas [data-mini-menu-open="true"] .search-results,#fullMapCanvas [data-mini-menu-open="true"] .search-results{display:none}
+#mapCanvas .fav,#fullMapCanvas .fav{left:0;right:43px;top:38px;bottom:auto;transform:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:auto;border:0;border-bottom:1px solid var(--line);border-radius:0;z-index:5}
+#mapCanvas .fav button,#fullMapCanvas .fav button{height:30px;min-height:30px;max-height:none;min-width:0;padding:3px 2px;border:0;border-right:1px solid var(--line);writing-mode:horizontal-tb;letter-spacing:0;font-size:12px}
+#mapCanvas .fav button>span,#fullMapCanvas .fav button>span{max-height:none;max-width:100%;line-height:1.4}
+#mapCanvas .level,#fullMapCanvas .level{right:0;top:0;width:43px;border-right:0;border-top:0;border-radius:0;z-index:17}
+#mapCanvas .level button,#fullMapCanvas .level button{width:42px;min-height:34px;padding:3px 1px;font-size:11px}
+#mapCanvas .zoom,#fullMapCanvas .zoom{right:0;top:auto;bottom:0;display:flex;transform:none;border-radius:0;border-right:0;border-bottom:0;z-index:8}
+#mapCanvas .zoom button,#fullMapCanvas .zoom button{width:32px;height:30px;min-height:30px;padding:0;font-size:17px}
+[data-page-root="fullmap"]{display:grid;grid-template-rows:minmax(0,1fr) auto auto}
+/* LJ-MINI-FULLMAP-CONTROLS-20261029: controls stay inside the visible map row. */
+#fullMapCanvas{position:relative;grid-area:1/1;inset:auto;min-height:0;width:100%;height:100%;container-type:size}
+#fullMapCanvas .search-results{max-height:min(185px,calc(100cqh - 38px))}
+#fullMapCanvas .mini-map-menu-list{max-height:min(145px,calc(100cqh - 70px))}
+#fullMapReturn{position:relative;grid-area:1/1;align-self:center;justify-self:start;left:0;top:auto;transform:none;width:27px;min-width:27px;min-height:68px;padding:4px 2px;border:0;border-radius:0;background:var(--glass);z-index:12}
+#fullMapReturn b{font-size:12px}
+#placeDock{position:relative;grid-row:2;inset:auto;min-height:0;margin:0;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;z-index:10}
+#placeDock .dock-head{padding:4px 8px 0}
+#placeDock .rowline{gap:5px;align-items:center}
+/* LJ-MINI-FULLMAP-HEADER-20261029: keep title actions in one row when details change. */
+#placeDock .dock-head>.rowline{display:grid;grid-template-columns:minmax(0,1fr) 30px auto;gap:0 5px;align-items:center}
+#placeDock .dock-head>.rowline>.grow{display:contents}
+#placeDock #dockPlaceName{grid-area:1/1;display:flex;align-items:center;min-width:0;min-height:30px}
+#placeDock #dockPlaceLocate{grid-area:1/2;align-self:center}
+#placeDock #dockToggle{grid-area:1/3;align-self:center}
+#placeDock #dockPlaceMeta{grid-area:2/1/3/-1;margin-top:0}
+#placeDock .dock-head{padding-top:3px}
+#dockPlaceName{min-height:26px;font-size:17px;line-height:1.35;white-space:normal;overflow-wrap:anywhere}
+#dockPlaceMeta{font-size:12px;line-height:1.35;white-space:normal}
+#dockPlaceMeta [data-admin-target]{min-height:24px;padding:1px}
+#dockPlaceLocate{width:30px;min-width:30px;height:30px;padding:5px}
+#dockToggle{min-height:30px;padding:3px 0;font-size:12px;white-space:nowrap}
+#placeDock .v-full-detail{grid-row:2;margin:3px 0 5px;font-size:12px;line-height:1.4}
+#placeDock .dock-head{display:grid;grid-template-rows:auto auto auto}
+#dockActions{grid-row:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:0 -8px;padding:0;border-top:1px solid var(--line)}
+#dockActions .btn{min-height:31px;padding:4px 1px;border:0;border-right:1px solid var(--line);border-radius:0;font-size:12px}
+#dockActions .btn:last-child{border-right:0}
+#placeDock[data-mini-details="false"] #dockPlaceMeta{display:none}
+[data-page-root="fullmap"]>.full-route{position:relative;grid-row:3;inset:auto;display:block;min-height:0;margin:0;padding:0;border:0;border-top:1px solid var(--line);border-radius:0;z-index:10}
+.mini-map-list-button{flex:none;min-width:24px;min-height:30px;padding:3px 2px;border:0;background:transparent;color:var(--sea);font:inherit;font-size:11px;white-space:nowrap}
+.mini-map-list-button[aria-expanded="true"]{background:var(--soft)}
+.mini-map-menu{position:absolute;top:38px;left:0;right:0;z-index:20;border:1px solid var(--line);border-top:0;background:var(--panel);box-shadow:0 4px 12px #132d3b26;color:var(--ink)}
+.mini-map-menu-head{display:flex;align-items:center;gap:6px;min-height:31px;padding:2px 7px;border-bottom:1px solid var(--line)}
+.mini-map-menu-head b{flex:1;font-size:12px;font-weight:600}
+.mini-map-menu button{border:0;background:transparent;color:var(--sea);font:inherit;font-size:12px}
+.mini-map-menu-head button{min-width:24px;min-height:28px;padding:3px 4px}
+.mini-map-menu-list{max-height:min(145px,28dvh);overflow:auto;overscroll-behavior:contain}
+#mapCanvas .mini-map-menu-list{max-height:110px}
+.mini-map-menu-row{display:flex;border-bottom:1px solid var(--line)}
+.mini-map-menu-row:last-child{border-bottom:0}
+.mini-map-menu-row>[data-mini-list-place]{flex:1;min-width:0;min-height:36px;padding:6px 8px;text-align:left;color:var(--ink);font-size:13px;overflow-wrap:anywhere}
+.mini-map-menu-row>[data-mini-stash-remove]{width:32px;min-height:36px;border-left:1px solid var(--line)}
+.mini-map-menu-list p{margin:0;padding:10px 8px;color:var(--muted);font-size:12px}
+.mini-map-menu button:active,.mini-map-menu button:hover{background:var(--soft)}
+
+/* LJ-MINI-MATERIALS-READER-20261029: mobile layout only; the copied reader and material state engines remain unchanged. */
+.device [data-page-root="package"] {
+  grid-template-rows:40px 40px auto auto minmax(0,1fr);
+  min-width:0;
+}
+.device .pkg-roots {height:40px;min-width:0}
+.device .pkg-roots button {font-size:12px;line-height:1.3;padding:3px 2px}
+.device .pkg-roots button>span {display:flex;align-items:center;justify-content:center;gap:4px}
+.device .pkg-roots i {flex:none;width:5px;height:5px;margin:0}
+.device .pkg-roots button.on:after {left:10px;right:10px}
+.device .mv-search {gap:7px;padding:0 10px;min-width:0}
+.device .mv-search input {height:38px;font-size:16px}
+.device .mv-search>button {width:32px;height:32px}
+.device [data-page-root="package"] .pkg-context {padding:5px 10px;gap:4px;min-width:0}
+.device .mv-nav {gap:6px;flex-wrap:wrap}
+.device .mv-nav .back {min-height:32px;padding:4px 3px;font-size:12px}
+.device .mv-nav>.btn {min-height:32px;padding:4px 3px;font-size:12px}
+.device .mv-menu>summary {min-height:32px;padding:4px 7px;font-size:12px}
+.device .mv-menu>div {max-width:min(290px,calc(100vw - 40px));max-height:min(230px,38dvh);overscroll-behavior:contain}
+.device .mv-menu button {min-height:36px;padding:7px 8px;font-size:14px}
+.device .mv-current {gap:4px 8px}
+.device .mv-current>strong {font-size:15px;line-height:1.45;flex:1 1 120px}
+.device .mv-controls {gap:8px}
+.device .mv-switch {min-height:34px;gap:5px;font-size:12px}
+.device .mv-controls .mv-body {min-height:34px;padding:5px 8px;font-size:13px}
+.device .mv-summary {min-height:28px;padding:3px 10px 5px;gap:8px}
+.device .mv-summary b {font-size:12px}
+.device .mv-summary .modified-filter {font-size:12px}
+.device .mv-flat-title {min-height:31px;gap:6px;padding:1px 0}
+.device .mv-flat-title strong {font-size:14px}
+.device .mv-flat-title span {font-size:12px}
+.device .mv-search-title>.btn {min-height:32px;padding:4px 7px}
+.device .mv-batch {gap:8px;padding:2px 0}
+.device .mv-batch .btn {min-height:34px;padding:5px 3px;font-size:12px}
+.device .package-scroll {overflow-x:hidden;overflow-y:auto;min-height:0;overscroll-behavior:contain;scrollbar-gutter:auto}
+.device .mv-row {padding:6px 10px;isolation:isolate}
+.device .mv-row-top {gap:3px 8px;min-width:0}
+.device .mv-name {min-height:34px;flex:1 1 116px;gap:6px}
+.device .mv-name strong {font-size:15px;line-height:1.45;white-space:normal;overflow-wrap:anywhere}
+.device .mv-row-meta {margin-top:2px;font-size:12px;line-height:1.45;pointer-events:none}
+.device .mv-row-actions {max-width:100%}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) {display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-rows:minmax(32px,auto) minmax(32px,auto);column-gap:8px;row-gap:0;padding-top:5px;padding-bottom:5px}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) :is(.mv-row-top,.mv-row-actions,.mv-controls) {display:contents}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) .mv-name {grid-column:1 / 3;grid-row:1;min-height:32px;align-self:stretch}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) .mv-body {grid-column:3;grid-row:1;justify-self:end;position:relative;z-index:1;min-height:32px;min-width:48px;padding:4px 8px}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) .mv-switch {grid-row:2;align-self:center;position:relative;z-index:1;min-height:32px}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) .mv-switch:has([data-mv-branch]) {grid-column:2}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) .mv-switch:has([data-mv-own]) {grid-column:3}
+.device .mv-row:has([data-mv-branch]):has([data-mv-own]) .mv-row-meta {grid-column:1;grid-row:2;margin:0;align-self:center}
+.device .mv-pick {width:30px;min-height:36px}
+.device .mv-pick input {width:19px;height:19px}
+.device .mv-row.picked .mv-name {flex-basis:100px}
+
+/* The three reading modes share one bounded work area; information and upstream controls stay in popovers. */
+.device [data-page-root="text"] {min-width:0;min-height:0;overflow:hidden}
+.device .text-head {height:auto;min-height:49px;padding:5px 10px;gap:8px}
+.device .text-head .back {min-height:34px;padding:5px 3px;font-size:13px}
+.device .text-head small {font-size:11px;line-height:1.25}
+.device .text-head h2 {margin:1px 0 0;max-height:70px;font-size:16px;line-height:1.4;overflow-y:auto;overflow-x:hidden;white-space:normal;text-overflow:clip;overflow-wrap:anywhere;overscroll-behavior:contain}
+.device .ljv-reader-tools {min-height:33px;padding:0 8px 3px;gap:5px}
+.device .ljv-reader-tools .btn {min-height:32px;padding:5px 4px;font-size:12px;white-space:nowrap}
+.device .ljv-reader-info {font-size:12px;flex:none}
+.device .ljv-reader-info>summary {min-height:30px;padding:4px 6px}
+.device .ljv-reader-info>section {left:8px;right:8px;max-height:min(260px,42dvh);padding:8px 10px;overscroll-behavior:contain}
+.device .ljv-reader-info header {min-height:30px}
+.device .ljv-reader-info dl>div {grid-template-columns:64px minmax(0,1fr);gap:7px;padding:7px 0;font-size:13px;line-height:1.6}
+.device #ljvCloseReaderInfo {width:32px;min-width:32px;height:32px;min-height:32px;font-size:20px}
+.device .mv-reader-controls {padding:2px 10px;gap:2px 8px;font-size:12px}
+.device .mv-reader-own {min-height:30px;flex:1 1 145px;gap:5px}
+.device .mv-reader-own .mv-switch {min-height:30px}
+.device .mv-reader-state {font-size:12px;line-height:1.4}
+.device .mv-reader-current-branch {min-height:30px;gap:5px;font-size:12px}
+.device .mv-reader-current-branch .mv-switch {min-height:30px}
+.device .mv-reader-upstream {font-size:12px}
+.device .mv-reader-upstream>summary {min-height:30px;padding:4px 6px}
+.device .mv-reader-upstream>div {left:8px;right:8px;padding:5px 8px;max-height:min(220px,36dvh)}
+.device .mv-reader-ancestor {min-height:36px;gap:8px}
+.device .mv-reader-ancestor>span {font-size:13px;line-height:1.45}
+.device .ljv-reader-tabs {min-height:42px;padding:3px 10px 5px;gap:6px}
+.device .ljv-reader-tabs button {min-height:34px;padding:6px 2px;font-size:13px;line-height:1.4;white-space:nowrap}
+.device .text-meta {min-height:27px;padding:3px 10px;gap:3px 6px;font-size:11px;line-height:1.5}
+.device #textMode {white-space:nowrap}
+.device #textStatus {flex:1 1 100px;min-width:0;overflow-wrap:anywhere}
+.device #ljvReaderCount {font-size:11px}
+.device .text-workspace {padding:9px 10px;min-height:0;flex:1 1 0;overflow:hidden}
+.device .text-view {font-size:15px;line-height:1.8;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+.device #textEditorPanel {height:100%;min-height:0;min-width:0;flex:1}
+.device .text-editor {height:100%;min-height:0;padding:8px;font-size:16px;line-height:1.75;border-radius:4px;overscroll-behavior:contain}
+.device .text-footer {min-height:45px;padding:5px 10px;gap:6px}
+.device .text-footer .rowline {min-width:0;gap:8px;flex-wrap:nowrap}
+.device .text-footer .btn {min-height:34px;padding:5px 9px;font-size:13px}
+.device .ljv-leave {padding:12px}
+.device .ljv-leave section {max-height:100%;overflow:auto;padding:16px;overscroll-behavior:contain}
+.device .ljv-leave h3 {margin-bottom:9px;font-size:16px}
+.device .ljv-leave p {margin-bottom:12px;font-size:13px;line-height:1.65}
+.device .ljv-leave-actions {gap:8px}
+.device .ljv-leave-actions .btn {min-height:39px}
+
+/* Region selection, descent, and tree expansion retain distinct targets and real indentation. */
+.device [data-page-root="region"] {min-width:0;min-height:0;grid-template-rows:auto auto minmax(0,1fr)}
+.device .region-search {padding:6px 8px}
+.device .region-search>.rowline {gap:6px;min-width:0}
+.device .region-search .back {min-height:34px;padding:5px 3px;font-size:12px;white-space:nowrap}
+.device .region-search .grow {min-width:0}
+.device .region-search .search {height:36px;min-height:36px;padding:0 6px;gap:4px}
+.device .region-search .search-input {min-width:0;font-size:16px}
+.device .region-search .modified-filter {flex:none;gap:3px;font-size:11px;white-space:nowrap}
+.device .region-search .v-region-search-exit {min-width:30px;min-height:32px}
+.device #regionCrumb {min-height:31px;max-height:66px;padding:2px 6px;gap:2px;overflow:auto;overscroll-behavior:contain;font-size:12px}
+.device #regionCrumb [data-region-admin],.device #regionCrumb .v-region-return {min-height:28px;padding:2px 4px}
+.device .region-list-scroll {min-width:0;overflow-x:hidden;overscroll-behavior:contain}
+.device .region-list-scroll .v-region-row {padding-right:8px;gap:6px}
+.device .region-list-scroll .v-region-row>.v-region-name {min-height:50px;padding:7px 10px}
+.device .v-region-name .name {font-size:15px;line-height:1.45;white-space:normal}
+.device .v-region-name .meta {font-size:12px;line-height:1.45;margin-top:2px}
+.device .region-list-scroll .v-region-row>.v-region-enter {min-width:64px;min-height:36px;padding:5px 8px;font-size:13px}
+.device .region-list-scroll .v-region-row>.tag {font-size:11px;padding:3px 5px;flex:none}
+.device .inline-open {padding:0 10px 9px}
+.device .inline-open .detail {padding:7px 0 0}
+.device .detail .v-region-summary {margin:0 0 7px;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+.device .v-region-actions {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 8px}
+.device .v-region-actions .btn {min-height:34px;padding:5px 6px;font-size:12px;white-space:normal}
+.device .region-related {gap:4px 10px;margin-top:6px}
+.device .region-related .btn {min-height:30px;padding:4px 0;font-size:13px;white-space:normal;text-align:left}
+.device .region-drawer {display:grid;grid-template-rows:43px auto minmax(0,1fr);min-height:0}
+.device .region-drawer .drawer-bar {height:43px;min-height:43px;padding:5px 10px;gap:8px}
+.device .region-drawer .drawer-bar .back {min-height:32px;padding:4px 3px;font-size:13px}
+.device .region-drawer .drawer-bar b {font-size:14px}
+.device .region-drawer .drawer-bar .tiny {font-size:11px}
+.device .region-drawer #regionDrawerCrumb {position:relative;inset:auto;height:auto;min-height:32px;max-height:64px;padding:2px 6px;overflow:auto;overscroll-behavior:contain}
+.device #regionDrawerCrumb [data-region-admin] {min-height:28px;padding:2px 4px;font-size:12px}
+.device .region-tree {position:relative;inset:auto;min-height:0;overflow-x:hidden;overflow-y:auto;padding:3px 0 10px;overscroll-behavior:contain}
+.device .region-tree .v-region-tree-row {min-height:44px;padding:0 8px 0 calc(6px + var(--tree-depth)*14px);gap:6px}
+.device .v-region-tree-toggle,.device .v-region-tree-spacer {flex-basis:30px;width:30px}
+.device .v-region-tree-toggle {min-height:34px}
+.device .v-region-tree-name {min-height:44px;padding:5px 3px}
+.device .v-region-tree-name .name {font-size:15px;line-height:1.4}
+.device .v-region-tree-name .meta {font-size:12px;line-height:1.4;margin-top:2px}
+
+@media (max-height:650px) {
+  .device .text-head {min-height:45px;padding-top:3px;padding-bottom:3px}
+  .device .text-head h2 {max-height:58px}
+  .device .ljv-reader-tabs {min-height:40px;padding-top:2px;padding-bottom:4px}
+  .device .text-workspace {padding-top:7px;padding-bottom:7px}
+}
+
+.mobile-diagnostic{display:flex;flex-direction:column;min-height:0}
+.mobile-diagnostic .record-switch{height:38px;min-height:38px;margin:0;border-width:0 0 1px;border-radius:0;flex:none}
+.mobile-diag-scope{margin:0;padding:5px 10px;border-bottom:1px solid var(--line);font-size:11px;line-height:1.4;color:var(--muted);flex:none}
+.mobile-diagnostic .summary{height:46px;min-height:46px;padding:5px 10px;flex:none}
+.mobile-diagnostic .metric{display:flex;align-items:baseline;justify-content:center;gap:5px}
+.mobile-diagnostic .metric b{font-size:19px}.mobile-diagnostic .metric span{font-size:12px}
+.mobile-diagnostic .section-tabs{height:38px;min-height:38px;flex:none}
+.mobile-diag-find{flex:none;border-bottom:1px solid var(--line)}
+.mobile-diagnostic .diag-filter{height:34px;min-height:34px;border:0;display:flex;padding:0 5px;gap:1px}
+.mobile-diagnostic .diag-filter button{flex:1;min-height:32px;padding:3px;font-size:12px}
+.mobile-diag-search{display:flex;align-items:center;gap:6px;padding:0 10px 5px;color:var(--muted)}
+.mobile-diag-search .input{flex:1;width:0;min-width:0;min-height:32px;padding:5px 7px}
+.mobile-diag-search .btn{min-height:32px;padding:2px 6px}
+.mobile-diagnostic .diag-scroll{position:static!important;inset:auto!important;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+.mobile-diagnostic .copybar{position:static;height:auto;min-height:45px;flex:none;padding:5px 10px}
+.mobile-diagnostic .copybar .btn{min-height:34px}
+#mobileCopyStatus:empty{display:none}#mobileCopyStatus{display:block;padding:3px 0 0;font-size:11px;line-height:1.35;color:var(--muted)}
+.mobile-diagnostic .diag-list{border-top:0}
+.mobile-diagnostic .mobile-diag-result{width:100%;text-align:left;border-width:0 0 1px;border-style:solid;border-color:var(--line);border-radius:0;min-height:55px;padding:8px 10px;gap:7px}
+.mobile-diag-result .name,.mobile-diag-result .meta,.mobile-diag-result .reason{display:block;overflow-wrap:anywhere}
+.mobile-diag-result .name{font-size:14px;line-height:1.45;font-weight:600}
+.mobile-diag-result.selected{background:var(--soft)}
+.mobile-diag-result:disabled{opacity:.7;cursor:default}
+.mobile-diag-result .tag{padding:1px 5px;font-size:11px;align-self:center}
+.mobile-diagnostic .report{padding:0 10px 12px}
+.mobile-diagnostic .report section{padding:9px 0;background:transparent}
+.mobile-diagnostic .report h3{display:flex;align-items:center;justify-content:space-between;font-size:14px;margin-bottom:4px;gap:5px}
+.mobile-diagnostic .report .code{margin:0;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.65;font-size:12px}
+.mobile-copy-fallback{padding:8px 10px;font-size:12px;color:var(--muted)}
+.mobile-copy-fallback textarea{display:block;width:100%;min-height:135px;resize:vertical;color:var(--ink);background:var(--panel);border:1px solid var(--control)}
+.mobile-settings .section-tabs{height:40px;min-height:40px}
+.mobile-settings .settings-scroll{top:40px;padding:0 0 12px}
+.mobile-settings .settings-status{padding:6px 10px;font-size:12px;line-height:1.45;min-height:0}
+.mobile-settings .set-group{margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;scroll-margin-top:0}
+.mobile-settings .set-group h3{padding:8px 10px;min-height:37px;font-size:14px;font-weight:600;align-items:center;line-height:1.4}
+.mobile-settings .set-row{padding:8px 10px}
+.mobile-settings .set-row p{font-size:12px;line-height:1.5}
+.mobile-settings .set-label{min-height:30px}.mobile-settings .set-label b{font-weight:600}
+.mobile-settings .set-control{gap:5px;margin-top:6px}.mobile-settings .set-control .btn{min-width:0;padding:5px 7px}
+.mobile-reading-options{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.mobile-reading-options label,.mobile-reading-boundary label,.mobile-reading-channel label{display:flex;flex-direction:column;min-width:0;gap:4px;font-size:12px;color:var(--muted)}
+.mobile-settings .input{width:100%;min-width:0;min-height:35px;padding:6px 7px;color:var(--ink);background:var(--panel)}
+.mobile-reading-boundary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.mobile-reading-channel{display:grid;grid-template-columns:1fr 1fr;gap:5px 6px;margin-top:8px}
+.mobile-reading-channel>b{grid-column:1/-1;font-size:12px;font-weight:600}
+.mobile-reading-save{padding:8px 10px 10px}.mobile-reading-save p{margin:0 0 7px;color:var(--muted);font-size:12px;line-height:1.45}
+.mobile-reading-save .btn{width:100%;min-height:36px}
+.mobile-settings .group-save{width:calc(100% - 20px);margin:0 10px 10px}
+.mobile-settings .v-favorite-setting,.mobile-settings .v-favorite-labels{gap:6px}
+.mobile-settings .save-note{font-size:11px}
+@container(max-height:460px){.mobile-diag-scope{font-size:10px;padding-top:3px;padding-bottom:3px}.mobile-diagnostic .summary{height:40px;min-height:40px}}
+/* LJ-MINI-REPORT-WRAP-20261029 */
+.mobile-diagnostic #diagReport p{overflow-wrap:anywhere}
+
+</style>
+<link rel="stylesheet" href="./runtime.css"><link rel="stylesheet" href="./materials.css"><link rel="stylesheet" href="./settings.css"></head>
+<body data-layout="mobile"><div id="ljLoading" role="status">正在读取资料…</div>
+<header class="preview-head"><h1>Living Japan｜竖版统一主构架</h1><span>430 × 860</span></header>
+<div class="device" id="device">
+<header class="top"><div class="lily"><button id="brandButton" type="button" data-icon="expand" aria-label="进入无边全地图" title="进入无边全地图"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button></div><nav class="nav" aria-label="主要页面"><button data-go="map">地图</button><button data-go="region">地区</button><button data-go="package">资料</button><button data-go="diagnostic">诊断</button></nav><div class="win"><button data-horizontal-link title="切换到横版" aria-label="切换到横版">横</button><button id="lockButton" title="锁定界面" aria-label="锁定界面" aria-pressed="true" class="on">锁</button><button id="themeButton" title="切换昼夜主题" aria-label="切换昼夜主题" aria-pressed="false">◐</button><button data-go="settings" id="settingsButton" title="设置" aria-label="设置">设</button><button title="展示页不模拟关闭" aria-label="关闭说明">×</button></div></header>
+<main class="body">
+<section class="page" data-page-root="map" aria-label="地图">
+<div class="map map-a" id="mapCanvas"></div>
+<div class="map-feed" id="mapFeed"><div class="place-head"><div class="place-mainline"><div class="place-copy"><div class="place-ident"><h3 id="mainPlaceName" title="双击地点大标题追加">上野站</h3><span class="place-kind" id="mainPlaceKind">车站｜东京都 → 台东区</span></div><p class="place-intro" id="mainPlaceIntro">上野站的一句话介绍</p></div><button class="current-map-locate" id="mainPlaceLocate" aria-label="在 SVG 地图中定位当前地点" title="在 SVG 地图中定位当前地点" data-legacy-click="locateVerticalCurrentPlace('map')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12A7 7 0 1 0 5 9c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></button><button class="btn text place-detail" id="mainPlaceDetail">查看详情</button></div></div><div class="endpoint"><button class="btn origin" id="setOrigin">设为起点</button><button class="btn dest" id="setDestination">设为终点</button></div><div class="related-title"><b>相关地点 5 个</b><span>单击切换地点 · 双击地点大标题追加</span></div><div class="list" id="mapRelated"></div><div class="scroll-hint">仅这一层滚动；地图与路线尾条保持不动</div></div>
+<div class="routebar"><div class="travel"><button class="on" data-travel="transit">公共交通</button><button data-travel="drive">驾车</button><button data-travel="walk">步行</button><button data-travel="bike">自行车</button></div><div class="route-actions"><div class="route-status"><div class="route-status-line"><b id="routeLabel">新宿站 → 上野站</b><button class="btn text route-clear" id="routeClear">清空起终点</button></div><span id="routeMeta">A→B 注入地点文字｜约 5 公里 · 约 20 分钟</span></div><button class="btn primary">出发</button></div></div>
+</section>
+<section class="page" data-page-root="fullmap" aria-label="无边全地图" hidden>
+<div class="map map-c" id="fullMapCanvas"></div>
+<button class="fullmap-return" id="fullMapReturn" data-go="map" aria-label="返回普通地图" title="返回普通地图"><span aria-hidden="true">‹</span><b>返回</b></button>
+<div class="place-dock" id="placeDock"><div class="dock-head"><div class="rowline"><div class="grow"><div class="place-name" id="dockPlaceName" title="双击地点大标题追加">上野站</div><div class="meta" id="dockPlaceMeta">车站 · 台东区</div></div><button class="current-map-locate" id="dockPlaceLocate" aria-label="在 SVG 地图中定位当前地点" title="在 SVG 地图中定位当前地点" data-legacy-click="locateVerticalCurrentPlace('fullmap')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12A7 7 0 1 0 5 9c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></button><button class="btn text" id="dockToggle">收起</button></div><div class="dock-actions" id="dockActions"><button class="btn origin">起点</button><button class="btn dest">终点</button><button class="btn" data-place-append>追加</button><button class="btn soft" data-place-detail>查看详情</button></div></div></div>
+<div class="full-route"><div class="travel" aria-label="全地图出行方式"><button class="on" data-travel="transit">公共交通</button><button data-travel="drive">驾车</button><button data-travel="walk">步行</button><button data-travel="bike">自行车</button></div><div class="full-route-line"><div class="route-copy"><div class="route-status-line"><b>新宿站 → 上野站</b><button class="btn text route-clear" id="fullRouteClear">清空起终点</button></div><span class="muted">公共交通 · A→B 地点序列</span></div><button class="btn primary">出发</button></div></div>
+</section>
+<section class="page" data-page-root="text" aria-label="正文查看与编辑" hidden>
+<header class="text-head"><button class="back" id="textBack">← 返回</button><div class="grow"><small id="textKind">地点正文</small><h2 id="textTitle">上野站</h2></div><button class="btn soft" id="textEdit">编辑修改稿</button></header>
+<div class="text-meta"><span id="textMode">查看正文</span><span>·</span><span id="textStatus">修改稿优先，内置原文不变</span></div>
+<div class="text-workspace"><article class="text-view" id="textView"></article><div id="textEditorPanel" hidden><textarea class="text-editor" id="textEditor" aria-label="编辑修改稿" spellcheck="false"></textarea></div><details class="text-original"><summary>内置原文（只读）</summary><pre id="textOriginalView"></pre></details></div>
+<footer class="text-footer"><small>仅保存到当前展示页面</small><div class="rowline"><button class="btn" id="textRestore" title="第一次点击确认，第二次恢复内置原文">恢复原版</button><button class="btn" id="textCancel" hidden>取消</button><button class="btn primary" id="textSave" hidden disabled>保存修改稿</button></div></footer>
+</section>
+<section class="page" data-page-root="region" aria-label="地区" hidden>
+<div class="region-search"><div class="rowline"><button class="back" id="openRegionDrawer">行政结构</button><div class="grow"><div class="search"><span>⌕</span><input class="search-input" id="regionSearch" type="search" placeholder="搜索当前层与地点" aria-label="搜索当前层与地点"></div></div><label class="modified-filter"><input id="regionModifiedOnly" type="checkbox" data-legacy-change="renderVerticalRegion()">只看更改</label></div></div>
+<div class="crumb" id="regionCrumb"></div>
+<div class="region-list-scroll"><div class="list" id="regionList"></div></div>
+<div class="region-drawer" id="regionDrawer" hidden><div class="drawer-bar"><button class="back" id="closeRegionDrawer">← 返回</button><b>行政结构</b><span class="tiny muted">抽屉内独立滚动</span></div><div class="crumb" id="regionDrawerCrumb"></div><div class="region-tree" id="regionTree"></div></div>
+</section>
+<section class="page" data-page-root="package" aria-label="资料" hidden>
+<div class="pkg-roots" id="packageRoots"></div>
+<div class="pkg-context"><div class="rowline"><button class="back" id="packageBack">← 返回上一级</button><div class="grow crumb" id="packageCrumbs"></div></div><div class="rowline"><label class="tiny muted grow">同级切换 <select id="packageSibling" aria-label="同级资料切换"></select></label><span class="tiny muted" id="packageEffective">当前生效</span><button class="switch on" id="packageCurrentSwitch" aria-label="当前资料层开关" aria-pressed="true"></button></div></div>
+<div class="related-title"><b>当前层直接内容</b><label class="modified-filter"><input id="packageModifiedOnly" type="checkbox">只看更改</label><span id="packageOffCount">0 项关闭</span></div><div class="package-scroll"><div class="list pkg-list" id="packageList"></div></div><div class="notice pkg-notice">整行进入下一层；开关独立点击。最末级条目可查看正文并编辑修改稿。</div>
+</section>
+<section class="page" data-page-root="diagnostic" aria-label="诊断" hidden>
+<div class="record-switch" id="diagRecords"><button class="on" data-diag-record="actual">上一轮实际注入</button><button data-diag-record="preview">当前聊天预览</button></div><div class="summary" id="diagSummary"></div>
+<div class="section-tabs" id="diagTabs"><button class="on" data-diag="results">资料结果</button><button data-diag="prompt">提示词全文</button><button data-diag="channels">读取通道</button><button data-diag="json">原始 JSON</button></div>
+<div class="diag-filter" id="diagFilter"><button class="on" data-filter="all">全部</button><button data-filter="injected">已注入</button><button data-filter="closed">已关闭</button><button data-filter="merged">已合并</button></div>
+<div class="diag-scroll" id="diagScroll"><div id="diagResults"></div><div class="report" id="diagReport" hidden></div></div><div class="copybar"><button class="btn primary" id="diagCopy">复制完整诊断结果</button></div>
+</section>
+<section class="page" data-page-root="settings" aria-label="设置" hidden>
+<div class="section-tabs" id="settingsTabs"><button class="on" data-settings="common">常用设置</button><button data-settings="reading">读取设置</button><button data-settings="places">常用地点</button><button data-settings="backup">备份与说明</button></div>
+<div class="settings-scroll" id="settingsScroll"><div class="settings-status" id="settingsStatus" aria-live="polite">按用途查找；每类设置保持原来的保存边界。</div>
+<section class="set-group" id="settings-common"><h3>常用设置<span class="save-note">即时生效</span></h3><div class="set-row"><div class="set-label"><b>横版／竖版排版</b></div><p>切换后恢复对应窗口位置，不重置当前资料。</p><div class="set-control"><button class="btn" data-horizontal-link>横版</button><button class="btn soft" id="verticalLayoutButton">竖版</button></div></div><div class="set-row"><label class="set-label" for="settingLocked"><b>锁定界面</b><button id="settingLocked" class="switch on" data-common-setting="locked" aria-label="锁定界面设置" aria-pressed="true"></button></label><p>点击面板外部时不关闭；不锁定窗口位置。</p></div><div class="set-row"><label class="set-label" for="settingDetailed"><b>显示详细诊断</b><button id="settingDetailed" class="switch" data-common-setting="detailed" aria-label="显示详细诊断" aria-pressed="false"></button></label><p>需要排查时显示完整命中原因。</p></div></section>
+<section class="set-group" id="settings-reading"><h3>读取设置<span class="save-note">统一保存</span></h3><div class="set-row"><div class="set-label"><b>正文文字与描写</b></div><div class="set-control"><select class="input grow" data-vertical-setting="script" aria-label="正文文字"><option>简体</option><option>繁体</option></select><select class="input grow" data-vertical-setting="detail" aria-label="描写档位"><option>标准</option><option>精简</option><option>详细</option></select></div></div><div class="set-row"><div class="set-label"><b>回看 AI 回复层数</b></div><p>只调整读取设置的共用项，由本组按钮一次保存。</p><div class="set-control"><input class="input grow" data-vertical-setting="reviewLayers" type="number" min="0" max="20" value="2" aria-label="回看 AI 回复层数"></div></div><div class="set-row" id="settingsChannels"><div class="set-label"><b>四条读取通道</b></div><p>从诊断的“读取通道”也会回到这里。优先标签先命中，排除标签随后过滤。</p><div class="settings-channel"><b>时间与自然</b><input class="input" data-vertical-channel="time" value="title、time_format" aria-label="时间与自然优先标签"></div><div class="settings-channel"><b>外部地域</b><input class="input" data-vertical-channel="region" value="地点、行政区" aria-label="外部地域优先标签"></div><div class="settings-channel"><b>内部场所</b><input class="input" data-vertical-channel="interior" value="场所、设施" aria-label="内部场所优先标签"></div><div class="settings-channel"><b>明确场景事件</b><input class="input" data-vertical-channel="events" value="事件、活动" aria-label="明确场景事件优先标签"></div></div><button class="btn primary group-save" data-save="读取设置">保存读取设置</button></section>
+<section class="set-group" id="settings-places"><h3>常用地点<span class="save-note">独立保存</span></h3><div class="set-row"><label class="favorite-setting">家<input class="input" data-favorite-place="家" value="新宿站"></label><label class="favorite-setting">工作地点<input class="input" data-favorite-place="工作地点" value="东京站"></label><label class="favorite-setting">周末<input class="input" data-favorite-place="周末" value="横滨站"></label><p>常用地点单独保存，不连带改动读取设置。</p></div><button class="btn group-save" data-save="常用地点">保存常用地点</button></section>
+<section class="set-group" id="settings-backup"><h3>备份与说明<span class="save-note">低频入口</span></h3><div class="set-row"><div class="set-label"><b>正文备份</b></div><p>这里只展示入口与范围提示，不读写正式文件。</p><div class="set-control"><button class="btn" data-backup-action="export">导出正文备份</button><button class="btn" data-backup-action="import">导入备份</button></div></div><div class="set-row"><div class="set-label"><b>使用说明</b></div><p>按地图、地区、资料、诊断分篇查看。</p><div class="set-control guide-buttons"><button class="btn" data-guide="map">地图</button><button class="btn" data-guide="region">地区</button><button class="btn" data-guide="package">资料</button><button class="btn" data-guide="diagnostic">诊断</button></div><article class="notice" id="settingsGuideDetail" hidden></article></div></section>
+</div>
+</section>
+</main>
+<div class="vertical-toast" id="verticalToast" role="status" aria-live="polite"></div>
+</div>
+
+<section class="flow-guide" id="verticalFlowGuide" aria-labelledby="verticalFlowGuideTitle">
+  <h2 id="verticalFlowGuideTitle">竖版代表性测试链</h2>
+  <p>直接按顺序点击即可，重点查看正文、上下级和地图之间的往返。</p>
+  <ol>
+    <li><strong>平级地点独立选定：</strong>点击地图相关地点名称「恩赐上野动物园」，它会替换大标题成为当前目标，可单独搜索和设起终点；它与上野站同属台东区，不是父子关系。</li>
+    <li><strong>地图内查看与修改：</strong>单击切换地点 · 双击地点大标题追加；右侧「追加」只追加名称。要看正文，请先让地点成为大标题，再点「查看详情」。正文以全宽侧层覆盖地图；点击「编辑修改稿」修改并保存，内置原文只读，修改稿与地区页共用，需连续点击两次「恢复原版」才会还原。</li>
+    <li><strong>地区最深层：</strong>顶部「地区」→「行政结构」→「全国」→「东京都」→「台东区」→「上野站」。具名地点只显示同层相关地点；行政路径和抽屉可返回上级。</li>
+    <li><strong>全地图正文：</strong>左上角线性展开图标 → 无边全地图；同样单击切换地点 · 双击地点大标题追加，并可使用「追加」或「查看详情」。关闭正文后仍留在全地图，并保留路线。普通地图与全地图的路线框内都可「清空起终点」，底部可切换四种出行方式。</li>
+    <li><strong>资料与只看更改：</strong>顶部「资料」分别进入四个大项，沿分组进入最末级正文；保存修改稿后勾选「只看更改」。诊断的当前聊天预览优先使用修改稿，上一轮实际记录不变。</li>
+    <li><strong>其他大区块：</strong>「诊断」的结果可进入对应资料或地点；「设置」可进入读取设置、常用地点与备份说明；各页均可切回地图。</li>
+  </ol>
+  <p class="flow-guide-note"><strong>切回横版：</strong>点击右上角「横」，或进入「设置 → 常用设置 → 横版」。普通地图与全地图会分别对应横版的普通地图与全地图；互跳会打开另一个文件，不保留未保存的修改。</p>
+  <p>两个 HTML 要放在同一目录。正文改动只保留在当前页面会话；未连接正式数据库、真实注入或真实地图定位，也未做 SillyTavern 实机验证。</p>
+</section>
+
+
+<script type="module" src="./controller.js"></script></body>
+</html>
