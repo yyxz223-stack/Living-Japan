@@ -3,9 +3,15 @@ import assert from 'node:assert/strict';
 const module = await import('../src/national-map.js').catch(() => ({}));
 function host() {
   const callbacks = new Map();
-  const context = new Proxy({}, { get(_, key) { return key === 'measureText' ? () => ({ width: 20 }) : () => {}; }, set() { return true; } });
+  const texts = [];
+  const context = new Proxy({}, { get(_, key) {
+    if (key === 'measureText') return text => ({ width: String(text).length * 8 });
+    if (key === 'clearRect') return () => { texts.length = 0; };
+    if (key === 'fillText') return (text, x, y) => { texts.push({ text, x, y }); };
+    return () => {};
+  }, set() { return true; } });
   const canvas = { style: {}, getContext: () => context, setAttribute() {}, remove() {}, addEventListener(k, fn) { callbacks.set(k, fn); }, removeEventListener() {}, getBoundingClientRect: () => ({ left: 0, top: 0, width: 800, height: 500 }), setPointerCapture() {}, releasePointerCapture() {} };
-  return { callbacks, container: { style: {}, ownerDocument: { createElement: () => canvas }, appendChild() {}, getBoundingClientRect: canvas.getBoundingClientRect } };
+  return { callbacks, texts, container: { style: {}, ownerDocument: { createElement: () => canvas }, appendChild() {}, getBoundingClientRect: canvas.getBoundingClientRect } };
 }
 const entity = { id: 'map:japan-v3:1', name: '测试店', coordinates: { x: 50, y: 50 }, regionCode: '13' };
 function make(container, options) { assert.equal(typeof module.createNationalMap, 'function'); return module.createNationalMap(container, options); }
@@ -57,4 +63,59 @@ test('four map representations are independent of density and locate preserves s
   assert.deepEqual(map.getView().center, location);
   assert.equal(map.getView().selectedId, 'map:japan-v3:3');
   map.destroy();
+});
+
+test('panning keeps fixed labels and their full text selects and appends the same entity', async () => {
+  const { container, callbacks, texts } = host(), selections = [], appended = [];
+  const points = [{ ...entity, id: 'map:japan-v3:a', name: '固定名字甲', coordinates: { x: 20, y: 50 } }, { ...entity, id: 'map:japan-v3:b', name: '固定名字乙', coordinates: { x: 45, y: 50 } }];
+  const catalog = { projection: () => ({}), loadRegion: async code => ({ code, map: { defaultBounds: [0, 0, 100, 100], land: [], rivers: [], railways: [] } }), viewport: async () => ({ entities: points, roads: [] }) };
+  const map = make(container, { catalog, onSelect: e => selections.push(e.id), onAppend: e => appended.push(e.id) });
+  const settleFrame = () => new Promise(resolve => setTimeout(resolve, 25));
+  try {
+    await map.setRegion('13'); map.setDetail('fine'); await settleFrame();
+    const before = texts.map(t => t.text);
+    const down = { pointerId: 1, pointerType: 'mouse', clientX: 400, clientY: 250 };
+    callbacks.get('pointerdown')(down);
+    callbacks.get('pointermove')({ ...down, clientX: 392 });
+    await settleFrame();
+    assert.deepEqual(texts.map(t => t.text), before);
+    callbacks.get('pointerup')({ ...down, clientX: 392, type: 'pointerup' });
+    const label = texts.find(t => t.text === points[0].name), center = map.getView().center;
+    assert(label);
+    const click = { ...down, clientX: label.x + 30, clientY: label.y - 3 };
+    callbacks.get('pointerdown')(click); callbacks.get('pointerup')({ ...click, type: 'pointerup' });
+    assert.deepEqual(selections, [points[0].id]);
+    assert.deepEqual(map.getView().center, center);
+    assert.deepEqual(appended, []);
+    callbacks.get('dblclick')({ ...click, preventDefault() {} });
+    assert.deepEqual(appended, [points[0].id]);
+  } finally { map.destroy(); }
+});
+
+test('an actual point wins when it lies within another entity long label', async () => {
+  const { container, callbacks } = host(), selected = [];
+  const points = [{ ...entity, id: 'a', name: '较长的地点名字甲', coordinates: { x: 40, y: 50 } }, { ...entity, id: 'b', name: '乙', coordinates: { x: 45, y: 50 } }];
+  const catalog = { projection: () => ({}), loadRegion: async code => ({ code, map: { defaultBounds: [0, 0, 100, 100], land: [], rivers: [], railways: [] } }), viewport: async () => ({ entities: points, roads: [] }) };
+  const map = make(container, { catalog, onSelect: e => selected.push(e.id) });
+  try {
+    await map.setRegion('13'); map.setDetail('fine'); await new Promise(resolve => setTimeout(resolve, 25));
+    const event = { pointerId: 1, pointerType: 'mouse', clientX: 400 - 5 * map.getView().scale, clientY: 250 };
+    callbacks.get('pointerdown')(event); callbacks.get('pointerup')({ ...event, type: 'pointerup' });
+    assert.deepEqual(selected, ['b']);
+  } finally { map.destroy(); }
+});
+
+test('normal detail and ultra modes display close-range names without a density override', async () => {
+  const { container, texts } = host();
+  const catalog = { projection: () => ({}), loadRegion: async code => ({ code, map: { defaultBounds: [0, 0, 100, 100], land: [], rivers: [], railways: [] } }), viewport: async () => ({ entities: [entity], roads: [] }) };
+  const map = make(container, { catalog });
+  try {
+    await map.setRegion('13'); await new Promise(resolve => setTimeout(resolve, 25));
+    assert.equal(map.getView().detail, 'standard');
+    assert(texts.some(t => t.text === entity.name));
+    map.setMode('ultra'); await new Promise(resolve => setTimeout(resolve, 25));
+    assert(texts.some(t => t.text === entity.name));
+    map.setMode('map'); await new Promise(resolve => setTimeout(resolve, 25));
+    assert(!texts.some(t => t.text === entity.name));
+  } finally { map.destroy(); }
 });

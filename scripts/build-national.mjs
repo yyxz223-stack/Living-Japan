@@ -27,6 +27,28 @@ export function buildNavigationRegions() {
   ].map(([code, name, regionCodes]) => ({ id: `navigation:${code}`, code, name, regionCodes }));
 }
 
+export function attachOverlayManifest(index, overlays) {
+  const byCode = new Map((overlays.regions || []).map(r => [r.code, r]));
+  const prefectures = (index.regions || []).filter(r => r.code !== '00');
+  for (const region of prefectures) {
+    const extra = byCode.get(region.code); if (!extra) continue;
+    region.overlayParts = extra.overlayParts; region.overlayCoverage = extra.overlayCoverage;
+  }
+  for (const view of [...(index.views || []), ...(index.regions || []).filter(r => r.code === '00')]) {
+    const included = view.code === '00' ? prefectures : prefectures.filter(r => view.regionCodes?.includes(r.code));
+    view.overlayParts = [...new Map(included.flatMap(r => r.overlayParts || []).map(p => [p.path, p])).values()];
+    view.overlayCoverage = {
+      railwayKinds: [...new Set(included.flatMap(r => r.overlayCoverage?.railwayKinds || []))],
+      railwaysComplete: included.length > 0 && included.every(r => r.overlayCoverage?.railwaysComplete === true),
+      boundaryAdminLevels: [...new Set(included.flatMap(r => r.overlayCoverage?.boundaryAdminLevels || []))].sort((a, b) => a - b),
+      boundariesComplete: included.length > 0 && included.every(r => r.overlayCoverage?.boundariesComplete === true),
+      sourceRegionCodes: included.map(r => r.code),
+    };
+  }
+  index.overlaySource = { path: 'overlays-pbf-20261027/overlay-manifest.json', version: overlays.version || null };
+  return index;
+}
+
 export function deriveAdministration(regions, baseData = {}) {
   const old = new Map((baseData.adminNodes || []).map(n => [n.id, n]));
   const oldPath = n => n ? [...oldPath(old.get(n.parentId)), n.nameJa || n.label] : [];
@@ -153,13 +175,19 @@ export async function buildNational() {
   const adminNodes = deriveAdministration(adminRegions, base);
   const views = [await buildMetroView(regions)];
   const sources = await readJson(path.join(sourceRoot, '来源记录.json'));
+  let pbfSource = { name: '日本全域地图japan-261027.osm.pbf', bytes: (await fs.stat(path.join(workspace, '日本全域地图japan-261027.osm.pbf'))).size, included: false, processed: false, purpose: 'Offline geographic source; no derived PBF geometry has been generated for this build.' };
+  try { const previous = await readJson(path.join(output, 'sources.json')); if (previous.pbf?.processed && previous.pbf?.derived?.manifest) pbfSource = previous.pbf; }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
   await writeJson('sources.json', { map: sources, mapInput: { name: path.basename(binPath), bytes: (await fs.stat(binPath)).size }, clothing: { name: path.basename(clothingPath), bytes: clothingBytes.length, sha256: hash(clothingBytes), checkedAt: '2026-09-07', reference: 'Per-store source, otherSources and address evidence retained.' },
-    pbf: { name: '日本全域地图japan-261027.osm.pbf', bytes: (await fs.stat(path.join(workspace, '日本全域地图japan-261027.osm.pbf'))).size, included: false, processed: false, purpose: 'Future offline geographic source; existing nationwide packages used in this release.' } });
+    pbf: pbfSource });
   await fs.cp(path.join(sourceRoot, 'licenses'), path.join(output, 'licenses'), { recursive: true });
-  await writeJson('manifest.json', { schemaVersion: 1, version: '2026-10-29.1', mapVersion: '3.0.0', rootId: 'admin:jp', navigationRegions: buildNavigationRegions(), defaultView: 'metro', projection, regions, views, adminNodes,
+  const manifest = { schemaVersion: 1, version: '2026-10-29.1', mapVersion: '3.0.0', rootId: 'admin:jp', navigationRegions: buildNavigationRegions(), defaultView: 'metro', projection, regions, views, adminNodes,
     counts: { regionPackages: regions.length, poiRecords: regions.reduce((n, r) => n + r.poiCount, 0), clothingRecords: storeCount, locatedClothingRecords: locatedStores, unlocatedClothingRecords: storeCount - locatedStores, brands: brands.length },
     identities: { poi: 'map:<database_namespace>:<database_id>; zero uses exact source name/coordinate/address identity', store: 'clothing:<source store id>', station: 'rail:<source station id>', noCrossSourceMerge: true },
-    policy: { geographicDataIsNotProse: true, sourceRecordsAreNotUniqueNationalEntities: true, pbfIncluded: false, runtimeRegionCache: 2, runtimePointBlockCache: 4, pointBlockMaxRecords: 20000, bodyBaseline: 'Living Japan v3.6', sources: 'sources.json' } });
+    policy: { geographicDataIsNotProse: true, sourceRecordsAreNotUniqueNationalEntities: true, pbfIncluded: false, runtimeRegionCache: 2, runtimePointBlockCache: 4, pointBlockMaxRecords: 20000, bodyBaseline: 'Living Japan v3.6', sources: 'sources.json' } };
+  try { attachOverlayManifest(manifest, await readJson(path.join(output, 'overlays-pbf-20261027/overlay-manifest.json'))); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
+  await writeJson('manifest.json', manifest);
   console.log(JSON.stringify({ regions: regions.length, adminNodes: adminNodes.length, stores: storeCount, locatedStores, projection }, null, 2));
 }
 

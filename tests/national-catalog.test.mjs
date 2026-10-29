@@ -129,3 +129,23 @@ test('geographic navigation hides Japan without changing official parents or loa
   assert.equal(fetched.length, 1);
   catalog.destroy();
 });
+
+function stableMapService() {
+  const park = { n: '示例公园', d: 'M0,0L1,0L1,1ZM3,3L4,3L4,4Z', x: 0.5, y: 0.5, a: 0.5 };
+  const raw = { region: { defaultBounds: [0, 0, 120, 120] }, geo: { land: [], parkPolys: [park] }, poi: { cats: '', list: [] }, transport: { stations: [{ id: 'a', n: '甲站', x: 20, y: 40 }, { id: 'b', n: '乙站', x: 23, y: 40 }], railways: [] } };
+  return { park, service: mod.createRegionService({ index: { regions: [{ code: '13', mapPath: '13.json.gz' }] }, baseUrl: 'https://example.invalid/', fetcher: async () => new Response(JSON.stringify(raw)) }) };
+}
+
+test('panning at the same zoom keeps the same geographic point representatives', async () => {
+  const { service } = stableMapService();
+  const before = await service.viewport('13', [0, 0, 120, 120], { mode: 'detail', limit: 50 });
+  const after = await service.viewport('13', [3, 0, 123, 120], { mode: 'detail', limit: 50 });
+  assert(before.entities.length > 0);
+  assert.deepEqual(after.entities.map(e => e.id), before.entities.map(e => e.id));
+});
+
+test('park geometry retains its source rings and name anchor', async () => {
+  const { service, park } = stableMapService();
+  const view = await service.loadRegion('13');
+  assert.deepEqual(view.map.parks[0], park);
+});

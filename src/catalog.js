@@ -56,7 +56,7 @@ function administration(index) {
   return { nodes, resolve, pathFor, details };
 }
 
-function simplifyPath(path, tolerance = 1) {
+function simplifyPath(path, tolerance = 1, thinExplicitLines = false) {
   let lastX = NaN, lastY = NaN, result = '';
   const tokens = String(path || '').match(/[MLZmlz]|-?\d+(?:\.\d+)?(?:e[-+]?\d+)?/g) || [];
   let mode = 'M';
@@ -67,7 +67,7 @@ function simplifyPath(path, tolerance = 1) {
     }
     const x = Number(tokens[i++]), y = Number(tokens[i++]);
     if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
-    if (mode === 'M' || !Number.isFinite(lastX) || Math.hypot(x - lastX, y - lastY) >= tolerance || i >= tokens.length || /^[MLZ]$/i.test(tokens[i])) {
+    if (mode === 'M' || !Number.isFinite(lastX) || Math.hypot(x - lastX, y - lastY) >= tolerance || i >= tokens.length || (thinExplicitLines ? /^[MZ]$/i : /^[MLZ]$/i).test(tokens[i])) {
       result += `${mode}${x},${y}`; lastX = x; lastY = y;
     }
     mode = 'L';
@@ -79,6 +79,9 @@ function simplifyPath(path, tolerance = 1) {
 export function createRegionService({ index, baseUrl, fetcher = globalThis.fetch, maxRegions = 2, maxDecodedBytes = 128 * 1024 * 1024 }) {
   const admin = administration(index), cache = new Map(), pending = new Map();
   const pointCache = new Map(), pointPending = new Map();
+  const overlayCache = new Map(), overlayPending = new Map();
+  const overlayBytes = () => [...overlayCache.values()].reduce((n, item) => n + item.jsonBytes, 0);
+  let overviewSummary = null, overviewSerial = 0;
   let loadQueue = Promise.resolve();
   const specs = new Map([...(index.views || []), ...(index.regions || [])].map(r => [regionKey(r.code), r]));
   const projection = index.projection || {};
@@ -100,6 +103,61 @@ export function createRegionService({ index, baseUrl, fetcher = globalThis.fetch
     if (pointPending.has(part.path)) return pointPending.get(part.path);
     const request = read(part.path).then(value => { pointCache.set(part.path, value); while (pointCache.size > 4) pointCache.delete(pointCache.keys().next().value); return value; });
     pointPending.set(part.path, request); try { return await request; } finally { pointPending.delete(part.path); }
+  }
+  // LJ-PBF-OVERLAY-01: optional verified geometry stays in a bounded worker cache.
+  async function overlayBlock(part) {
+    if (overlayCache.has(part.path)) { const entry = overlayCache.get(part.path); overlayCache.delete(part.path); overlayCache.set(part.path, entry); return entry.data; }
+    if (overlayPending.has(part.path)) return overlayPending.get(part.path);
+    const request = read(part.path).then(data => {
+      overlayCache.set(part.path, { data, jsonBytes: part.jsonBytes || JSON.stringify(data).length * 2 });
+      while (overlayCache.size > 4 || overlayBytes() > 32 * 1024 * 1024) overlayCache.delete(overlayCache.keys().next().value);
+      return data;
+    });
+    overlayPending.set(part.path, request); try { return await request; } finally { overlayPending.delete(part.path); }
+  }
+  async function overlaysFor(code, bounds, mode, scale) {
+    const spec = specs.get(code); if (!spec?.overlayParts?.length || mode === 'schem') return null;
+    let level = scale >= 0.6 ? 'detail' : 'overview';
+    if (level === 'detail' && !spec.overlayParts.some(p => p.level === 'detail')) level = 'overview';
+    const bandScale = 2 ** Math.ceil(Math.log2(Math.max(0.0001, scale))), summaryKey = `${code}:${mode}:${level}:${bandScale}:${scale >= 1}:${scale >= 4}`;
+    if (overviewSummary?.key === summaryKey && bounds[0] >= overviewSummary.bounds[0] && bounds[1] >= overviewSummary.bounds[1] && bounds[2] <= overviewSummary.bounds[2] && bounds[3] <= overviewSummary.bounds[3]) {
+      return { ...overviewSummary.value, metrics: { ...overviewSummary.value.metrics, viewCacheHit: true, overviewCacheHit: level === 'overview' } };
+    }
+    const marginX = (bounds[2] - bounds[0]) * 0.2, marginY = (bounds[3] - bounds[1]) * 0.2;
+    const query = [bounds[0] - marginX, bounds[1] - marginY, bounds[2] + marginX, bounds[3] + marginY];
+    const intersects = b => !b || !(b[2] < query[0] || b[0] > query[2] || b[3] < query[1] || b[1] > query[3]);
+    const parts = [...new Map(spec.overlayParts.filter(p => p.level === level && intersects(p.bounds)).map(p => [p.path, p])).values()];
+    const rails = new Map(), borders = new Map(), seenRails = new Set(), seenBorders = new Set(), railwaysActive = spec.overlayCoverage?.railwaysComplete === true;
+    let railwayRecords = 0, boundaryRecords = 0;
+    const maxAdminLevel = mode === 'map' ? 4 : mode === 'ultra' && scale >= 1 ? 8 : scale >= 0.6 ? 7 : 4;
+    const append = (groups, key, fields, d) => {
+      if (!groups.has(key)) groups.set(key, { ...fields, segments: [] });
+      if (level === 'overview') d = d.split(/(?=M)/).filter(Boolean).map(ring => {
+        const smaller = simplifyPath(ring, 0.6 / bandScale, true);
+        return ring.includes('Z') && (smaller.match(/L/g) || []).length < 3 ? ring : smaller;
+      }).join(' ');
+      groups.get(key).segments.push(d);
+    };
+    for (const part of parts) {
+      const data = await overlayBlock(part);
+      if (railwaysActive) for (const rail of data.railways || []) {
+        if (seenRails.has(rail.id) || !intersects(rail.b) || !rail.d || (mode === 'map' && rail.kind !== 'rail')) continue;
+        const service = rail.service || '', branch = service && service !== 'main';
+        if (branch && !(mode === 'ultra' && scale >= 4)) continue;
+        seenRails.add(rail.id); append(rails, `${rail.kind}:${service}`, { kind: rail.kind, service }, rail.d); railwayRecords++;
+      }
+      for (const boundary of data.boundaries || []) {
+        const adminLevel = Number(boundary.adminLevel);
+        if (seenBorders.has(boundary.id) || !intersects(boundary.b) || !boundary.d || adminLevel > maxAdminLevel) continue;
+        seenBorders.add(boundary.id); append(borders, adminLevel, { adminLevel }, boundary.d); boundaryRecords++;
+      }
+    }
+    const paths = groups => [...groups.values()].map(({ segments, ...fields }) => ({ ...fields, d: segments.join(' ') }));
+    const value = { level, railwaysActive, railways: paths(rails), boundaries: paths(borders), metrics: { parts: parts.length, referencedBytes: parts.reduce((n, p) => n + (p.bytes || 0), 0), railwayRecords, boundaryRecords, viewCacheHit: false, overviewCacheHit: false } };
+    value.cacheKey = `${level}:${++overviewSerial}`;
+    const bytes = [...value.railways, ...value.boundaries].reduce((n, record) => n + record.d.length * 2 + 128, 0);
+    overviewSummary = bytes <= 32 * 1024 * 1024 ? { key: summaryKey, bounds: query, value, bytes } : null;
+    return value;
   }
   async function* pointRows(region, filter = () => true) {
     if (region.raw.poi?.list?.length) { yield region.raw.poi.list; return; }
@@ -142,9 +200,10 @@ export function createRegionService({ index, baseUrl, fetcher = globalThis.fetch
       const map = { bounds: raw.geo?.bounds || raw.region?.defaultBounds, defaultBounds: raw.region?.defaultBounds || raw.geo?.bounds, schematic: raw.schematic || null,
         land: (raw.geo?.land || []).map(g => ({ n: g.n, code: g.code, d: simplifyPath(g.d, tolerance) })),
         rivers: (raw.geo?.rivers || []).map(g => ({ n: g.n, w: g.w, d: simplifyPath(g.d, tolerance) })),
-        parks: (raw.geo?.parkPolys || []).map(g => ({ n: g.n, d: simplifyPath(g.d, tolerance) })),
+        parks: (raw.geo?.parkPolys || []).map(g => ({ n: g.n, d: g.d, x: g.x, y: g.y, a: g.a })),
         labels: raw.geo?.labels || [],
-        railways: (raw.transport?.railways || []).map(g => ({ n: g.n, c: g.c, d: simplifyPath(g.d, tolerance) })) };
+        railways: (raw.transport?.railways || []).map(g => ({ n: g.n, c: g.c, d: simplifyPath(g.d, tolerance) })),
+        pbfRailways: spec.overlayCoverage?.railwaysComplete === true && Boolean(spec.overlayParts?.length) };
       const region = { code, raw, stores, stations, map, metrics: { fetchDecodeMs: +(fetchedAt - start).toFixed(1), prepareMs: +(at() - fetchedAt).toFixed(1), rawBytes: spec.jsonBytes || 0 } };
       cache.set(code, region);
       const cachedBytes = () => [...cache.values()].reduce((n, r) => n + (r.metrics.rawBytes || 0), 0);
@@ -199,19 +258,26 @@ export function createRegionService({ index, baseUrl, fetcher = globalThis.fetch
     for await (const rows of pointRows(region)) for (const row of rows) if (mapPointId(row) === id) return makeEntity(row, region.code, cats);
     return null;
   }
-  async function viewport(code, bounds, { limit = 700, detail = 'standard', mode = 'detail', focusRegionCode } = {}) {
+  async function viewport(code, bounds, { limit = 700, detail = 'standard', mode = 'detail', focusRegionCode, scale = 800 / Math.max(1, bounds[2] - bounds[0]), includeOverlays = true } = {}) {
     const region = await ensure(code), [minX, minY, maxX, maxY] = bounds, result = [], bins = new Set();
     const max = Math.min(1200, Math.max(50, limit)), cats = region.raw.poi?.cats || '';
-    const columns = Math.max(12, Math.ceil(Math.sqrt(max * 1.7))), rowsN = Math.max(8, Math.ceil(max / columns));
+    // LJ-MAP-STABLE-POINTS-01: nested geographic cells retain representatives while panning.
+    const spanX = Math.max(0.0001, maxX - minX), spanY = Math.max(0.0001, maxY - minY);
+    let cell = 2 ** Math.ceil(Math.log2(Math.sqrt(spanX * spanY / max)));
+    while ((Math.ceil(spanX / cell) + 2) * (Math.ceil(spanY / cell) + 2) > max) cell *= 2;
+    const grid = [Math.floor(minX / cell), Math.floor(minY / cell), Math.floor(maxX / cell), Math.floor(maxY / cell)];
+    const scan = [grid[0] * cell, grid[1] * cell, (grid[2] + 1) * cell, (grid[3] + 1) * cell];
     const consider = (x, y, make) => {
-      if (x < minX || x > maxX || y < minY || y > maxY || result.length >= max) return;
-      const key = `${Math.floor((x - minX) / (maxX - minX || 1) * columns)},${Math.floor((y - minY) / (maxY - minY || 1) * rowsN)}`;
-      if (bins.has(key)) return; bins.add(key); result.push(make());
+      const gx = Math.floor(x / cell), gy = Math.floor(y / cell);
+      if (gx < grid[0] || gx > grid[2] || gy < grid[1] || gy > grid[3]) return;
+      const key = `${gx},${gy}`;
+      if (bins.has(key)) return; bins.add(key);
+      if (x >= minX && x <= maxX && y >= minY && y <= maxY) result.push(make());
     };
     if (mode !== 'map') for (const station of region.stations) consider(station.coordinates.x, station.coordinates.y, () => station);
     if (mode === 'ultra') {
       for (const store of region.stores) { const xy = projectCoordinates(store.coordinates, projection); if (xy) consider(...xy, () => store); }
-      for await (const rows of pointRows(region, part => !part.bounds || !(part.bounds[2] < minX || part.bounds[0] > maxX || part.bounds[3] < minY || part.bounds[1] > maxY))) {
+      for await (const rows of pointRows(region, part => !part.bounds || !(part.bounds[2] < scan[0] || part.bounds[0] > scan[2] || part.bounds[3] < scan[1] || part.bounds[1] > scan[3]))) {
         for (const row of rows) { consider(row[0], row[1], () => makeEntity(row, region.code, cats)); if (result.length >= max) break; }
         if (result.length >= max) break;
       }
@@ -220,12 +286,13 @@ export function createRegionService({ index, baseUrl, fetcher = globalThis.fetch
     if (region.code === 'metro' && mode === 'ultra' && maxX - minX < 900) {
       const center = [(minX + maxX) / 2, (minY + maxY) / 2], covered = specs.get('metro')?.coverage || [];
       const target = covered.find(r => r.code === focusRegionCode) || covered.filter(r => center[0] >= r.bounds[0] && center[0] <= r.bounds[2] && center[1] >= r.bounds[1] && center[1] <= r.bounds[3]).sort((a, b) => (a.bounds[2] - a.bounds[0]) * (a.bounds[3] - a.bounds[1]) - (b.bounds[2] - b.bounds[0]) * (b.bounds[3] - b.bounds[1]))[0];
-      if (target) { const finer = await viewport(target.code, bounds, { limit, detail, mode }); const ids = new Set(result.map(e => e.id)); for (const e of finer.entities) if (!ids.has(e.id) && result.length < max) result.push(e); roads = finer.roads; }
+      if (target) { const finer = await viewport(target.code, bounds, { limit, detail, mode, scale, includeOverlays: false }); const ids = new Set(result.map(e => e.id)); for (const e of finer.entities) if (!ids.has(e.id) && result.length < max) result.push(e); roads = finer.roads; }
     }
-    return { entities: result, roads, count: result.length };
+    const overlays = includeOverlays ? await overlaysFor(region.code, bounds, mode, scale) : null;
+    return { entities: result, roads, count: result.length, overlays };
   }
   return { async loadRegion(code) { const r = await ensure(code); return { code: r.code, map: r.map, poiCount: specs.get(r.code)?.poiCount || r.raw.poi?.list?.length || 0, storeCount: r.stores.length, metrics: { ...r.metrics, cachedRegions: [...cache.keys()], cachedPointBlocks: pointCache.size } }; }, search, children, resolve, viewport,
-    clear() { cache.clear(); pointCache.clear(); }, stats() { return { cachedRegions: [...cache.keys()], pendingRegions: [...pending.keys()], cachedPointBlocks: pointCache.size }; } };
+    clear() { cache.clear(); pointCache.clear(); overlayCache.clear(); overviewSummary = null; }, stats() { return { cachedRegions: [...cache.keys()], pendingRegions: [...pending.keys()], cachedPointBlocks: pointCache.size, cachedOverlayBlocks: overlayCache.size, cachedOverlayBytes: overlayBytes(), cachedOverlayViewBytes: overviewSummary?.bytes || 0, cachedOverviewBytes: overviewSummary?.value.level === 'overview' ? overviewSummary.bytes : 0 }; } };
 }
 
 function workerClient(index, baseUrl) {
